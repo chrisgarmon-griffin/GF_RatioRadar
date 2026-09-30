@@ -1,50 +1,92 @@
 import Link from "next/link";
+import { PageHero } from "@/components/resources/PageHero";
+import { RatioLab } from "@/components/resources/RatioLab";
 export const metadata = { title: "DSCR Guide | Griffin Funding RatioRadar" };
+const topics = [
+  [
+    "Rental-income DSCR",
+    "Start with rent and housing costs.",
+    "The financing calculator divides modeled monthly rent by principal and interest, taxes, property insurance, HOA dues and flood insurance. A ratio of 1.00× means rent equals that payment. It does not establish profitability or loan eligibility.",
+  ],
+  [
+    "Short-term rentals",
+    "Separate revenue from the rent used in the model.",
+    "Annual revenue is divided by 12 and reduced by the assumption you enter. The 20% starting reduction comes from the supplied calculator reference. It is editable and is not an investor guideline. Actual rent treatment and documentation need verification.",
+  ],
+  [
+    "Interest-only financing",
+    "A lower modeled payment has a time boundary.",
+    "Interest-only payments equal principal multiplied by the annual rate, divided by 12. Principal does not decline during the interest-only period. Future amortizing payments, the interest-only period and product availability must be confirmed.",
+  ],
+  [
+    "Cash-out refinance",
+    "Start with equity. Account for the costs.",
+    "The calculator limits the modeled loan by your LTV assumption, then subtracts the existing balance and financed closing costs to estimate proceeds. The 80% starting LTV is a modeling default, not a program requirement. A cash-to-close shortfall is shown when applicable.",
+  ],
+  [
+    "Investment returns",
+    "Look past the financing ratio.",
+    "Net operating income is effective rent after vacancy less operating expenses, before debt service. Cash flow subtracts the loan payment. Cap rate uses annual NOI divided by property value; cash-on-cash uses annual cash flow divided by invested cash. Negative values remain negative and zero-denominator ratios are not defined.",
+  ],
+];
 export default function Page() {
   return (
-    <main className="wrap article-page">
-      <span className="eyebrow">UNDERSTAND THE MODEL</span>
-      <h1>A ratio is a starting point.</h1>
-      <h2>Rental-income DSCR</h2>
-      <p>
-        This calculator divides modeled monthly rent by principal and interest,
-        property taxes, property insurance, HOA dues and flood insurance. A
-        ratio of 1.00× means rent equals that modeled housing payment. It does
-        not mean the property breaks even after all operating costs, or that a
-        loan qualifies.
-      </p>
-      <h2>Short-term rentals</h2>
-      <p>
-        The financing calculator converts annual revenue into a monthly average
-        and applies the income reduction you enter. Its 20% starting reduction
-        comes from the supplied calculator reference and is a modeling
-        assumption. Actual investor treatment and rental documentation require
-        verification.
-      </p>
-      <h2>Interest-only and refinance</h2>
-      <p>
-        Interest-only payments use loan principal multiplied by the annual
-        interest rate, divided by 12. The principal balance does not decline
-        during that period. Refinance proceeds are limited by the LTV assumption
-        you enter, after the current balance and financed closing costs. The 80%
-        starting LTV is not a program guideline.
-      </p>
-      <h2>Cash flow is a different question</h2>
-      <p>
-        Net operating income is effective rent after vacancy less operating
-        expenses, before debt service. Cash flow subtracts the loan payment. Cap
-        rate divides annual NOI by property value; cash-on-cash return divides
-        annual cash flow by invested cash. Negative results remain negative. A
-        ratio with a zero denominator is shown as not defined.
-      </p>
-      <h2>What the model does not establish</h2>
-      <p>
-        Program eligibility, current pricing, APR, reserves, lender-specific
-        rent methodology, taxes on investment income, appreciation and
-        disposition proceeds are outside this model. A human underwriter must
-        review the full loan scenario.
-      </p>
-      <Link href="/calculators/dscr/">Build a financing scenario →</Link>
+    <main className="wrap resource-page">
+      <PageHero
+        eyebrow="the dscr field guide"
+        title="Understand the ratio."
+        accent="See the bigger picture."
+        description="A ratio is a starting point. Explore what it measures, change a few inputs and learn what still needs a human review."
+        actions={[
+          { label: "Try the ratio lab", href: "#ratio-lab" },
+          { label: "Open DSCR calculator", href: "/calculators/dscr/" },
+        ]}
+      />
+      <RatioLab />
+      <section className="guide-topics" aria-labelledby="topics-title">
+        <div className="resource-section-heading">
+          <div>
+            <span className="resource-label">THE DETAILS THAT MATTER</span>
+            <h2 id="topics-title">Read between the numbers.</h2>
+          </div>
+          <p>Open a topic for the assumptions behind the model.</p>
+        </div>
+        {topics.map(([title, sub, copy], i) => (
+          <details key={title} className="resource-topic">
+            <summary>
+              <span className="topic-number">0{i + 1}</span>
+              <span>
+                <strong>{title}</strong>
+                <small>{sub}</small>
+              </span>
+              <span className="topic-plus" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <p>{copy}</p>
+          </details>
+        ))}
+      </section>
+      <section className="resource-review-strip">
+        <div>
+          <span className="resource-label">THE HUMAN PART</span>
+          <h2>
+            A model informs.
+            <br />
+            An underwriter reviews.
+          </h2>
+        </div>
+        <div>
+          <p>
+            Program eligibility, current pricing, APR, reserves and
+            lender-specific rental methodology are outside these estimates. A
+            human underwriter must review the full loan scenario.
+          </p>
+          <Link href="/calculators/dscr/" className="resource-pill">
+            Build your scenario <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

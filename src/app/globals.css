@@ -3220,3 +3220,1146 @@ input[type="checkbox"] {
     font-size: 19px;
   }
 }
+/* Adapted Track A resource pages. Conta files were not supplied; retain the
+   existing self-hosted Jakarta family rather than synthesizing a brand font. */
+.resource-page {
+  --resource-canvas: #f7f5f1;
+  --resource-ice: #ecf4f8;
+  --resource-ink: #333;
+  --resource-muted: #626262;
+  padding-top: 30px;
+  font-synthesis: none;
+}
+.resource-page h1,
+.resource-page h2,
+.resource-page h3 {
+  font-family: "Plus Jakarta Sans Variable", sans-serif;
+  font-weight: 400;
+}
+.resource-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #272b2c;
+  border-radius: 28px;
+  min-height: 460px;
+  padding: 66px 60px;
+  color: white;
+}
+.resource-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(24, 28, 29, 0.9),
+    rgba(24, 28, 29, 0.65) 55%,
+    rgba(24, 28, 29, 0.1)
+  );
+  pointer-events: none;
+}
+.resource-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 790px;
+}
+.resource-eyebrow {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  background: #d7a224;
+  color: #252525;
+  border-radius: 100px;
+  padding: 8px 13px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+.resource-eyebrow > span {
+  font-size: 13px;
+}
+.resource-hero h1 {
+  font-size: clamp(34px, 4.7vw, 66px);
+  letter-spacing: -0.05em;
+  line-height: 1.14;
+  margin: 25px 0 20px;
+  color: #fff;
+}
+.resource-hero h1 em {
+  font-weight: 400;
+  color: #f3e454;
+}
+.resource-hero p {
+  font-size: 14px;
+  line-height: 1.85;
+  color: #e0e4e3;
+  max-width: 490px;
+  margin: 0;
+}
+.resource-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+.resource-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  border-radius: 100px;
+  background: #bd0c0c;
+  color: #fff;
+  padding: 15px 22px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 400;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.resource-pill:hover {
+  background: #970a0a;
+}
+.resource-pill-outline {
+  background: #ffffff08;
+  border: 1px solid #ffffff60;
+  color: #fff;
+}
+.resource-pill-outline:hover {
+  background: #ffffff18;
+}
+.resource-pill > span,
+.workbench-card-action > span,
+.resource-feature-rows > a > span:last-child {
+  transition: transform 0.2s;
+}
+.resource-pill:hover > span,
+.workbench-card:hover .workbench-card-action > span,
+.resource-feature-rows > a:hover > span:last-child {
+  transform: translate(2px, -2px);
+}
+.resource-page a:focus-visible,
+.resource-page button:focus-visible,
+.resource-page summary:focus-visible,
+.resource-page input:focus-visible {
+  outline: 3px solid #bd0c0c;
+  outline-offset: 5px;
+}
+.resource-hero a:focus-visible {
+  outline-color: #f3e454;
+}
+.hero-coordinate {
+  position: absolute;
+  right: 30px;
+  bottom: 25px;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.18em;
+  color: #b7c6c7;
+}
+.resource-radar {
+  position: absolute;
+  z-index: -2;
+  width: 650px;
+  height: 650px;
+  right: -95px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #34484a 0, transparent 69%);
+  pointer-events: none;
+}
+.resource-radar > i {
+  position: absolute;
+  inset: 8%;
+  border: 1px solid #9cb5b62b;
+  border-radius: 50%;
+}
+.resource-radar > i:nth-of-type(2) {
+  inset: 23%;
+}
+.resource-radar > i:nth-of-type(3) {
+  inset: 38%;
+}
+.radar-sweep {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 270deg,
+    #d7a22408 300deg,
+    #d7a22438 359deg,
+    transparent 360deg
+  );
+  animation: resource-radar-sweep 12s linear infinite;
+}
+.radar-axis {
+  position: absolute;
+  inset: 8%;
+  background:
+    linear-gradient(
+      transparent calc(50% - 0.5px),
+      #9cb5b622 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 0.5px),
+      #9cb5b622 50%,
+      transparent calc(50% + 0.5px)
+    );
+  border-radius: 50%;
+}
+.radar-center,
+.radar-point {
+  position: absolute;
+  border-radius: 50%;
+  background: #d7a224;
+  box-shadow: 0 0 0 7px #d7a22412;
+  width: 7px;
+  height: 7px;
+}
+.radar-center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.point-one {
+  left: 66%;
+  top: 29%;
+  width: 5px;
+  height: 5px;
+}
+.point-two {
+  left: 80%;
+  top: 65%;
+  width: 4px;
+  height: 4px;
+}
+@keyframes resource-radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.resource-label {
+  display: block;
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.13em;
+  color: #626262;
+  line-height: 1.7;
+}
+.resource-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+.resource-section-heading h2 {
+  font-size: 32px;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  margin: 12px 0 0;
+}
+.resource-section-heading > p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #626262;
+  max-width: 260px;
+}
+.resource-fine {
+  font-size: 11px !important;
+  line-height: 1.8 !important;
+  color: #626262;
+}
+.resource-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+  color: #bd0c0c;
+  text-decoration: none;
+}
+.resource-inline-link:hover {
+  text-decoration: underline;
+}
+.resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 22px 0;
+}
+.resource-tags li {
+  font-size: 10px;
+  padding: 8px 11px;
+  border: 1px solid #d4d9da;
+  border-radius: 100px;
+  color: #555;
+}
+.workbench-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+.workbench-card {
+  border: 1px solid #dadcda;
+  border-radius: 28px;
+  overflow: hidden;
+  color: #333;
+  text-decoration: none;
+  background: #faf9f6;
+  transition: border-color 0.2s;
+}
+.workbench-card:hover {
+  border-color: #a6b2b5;
+}
+.workbench-graphic {
+  height: 190px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ecf4f8;
+  position: relative;
+  overflow: hidden;
+}
+.graphic-finance {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  color: #456067;
+  padding-right: 120px;
+}
+.graphic-fraction {
+  width: 155px;
+  height: 1px;
+  background: #81999e;
+}
+.graphic-finance b {
+  position: absolute;
+  right: 42px;
+  font:
+    24px "Plus Jakarta Sans Variable",
+    sans-serif;
+}
+.graphic-cashflow {
+  align-items: end;
+  gap: 25px;
+  background: #ece9e2;
+}
+.graphic-cashflow > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  color: #575b58;
+}
+.graphic-cashflow i {
+  display: block;
+  width: 60px;
+  height: 100px;
+  background: #334b4f;
+  border-radius: 8px 8px 0 0;
+}
+.graphic-cashflow > div:nth-child(2) i {
+  height: 72px;
+  background: #a4b6ba;
+}
+.graphic-cashflow > div:nth-child(3) i {
+  height: 28px;
+  background: #bd0c0c;
+}
+.workbench-card-copy {
+  padding: 30px;
+}
+.workbench-card h2 {
+  font-size: 29px;
+  letter-spacing: -0.035em;
+  margin: 15px 0;
+}
+.workbench-card p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #626262;
+}
+.workbench-card-action {
+  border-top: 1px solid #d9d7d1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 22px;
+  margin-top: 26px;
+  font-size: 12px;
+  color: #bd0c0c;
+}
+.workbench-bridge {
+  margin-top: 60px;
+  padding: 42px;
+  background: #faf9f6;
+  border: 1px solid #dedbd5;
+  border-radius: 28px 28px 0 0;
+}
+.workbench-bridge h2 {
+  font-size: 34px;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  margin: 14px 0;
+}
+.workbench-bridge > p {
+  max-width: 600px;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #626262;
+}
+.resource-feature-rows {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  border-top: 1px solid #dedbd5;
+  padding-top: 25px;
+  margin-top: 25px;
+}
+.resource-feature-rows > a {
+  background: #ecf4f8;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  font-size: 12px;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.resource-feature-rows > a:hover {
+  background: #dceaf1;
+}
+.resource-feature-rows > a > span:first-child {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  color: #606a70;
+}
+.resource-feature-rows > a > span:last-child {
+  margin-left: auto;
+}
+.resource-hero-compact {
+  min-height: 310px;
+  padding: 42px 45px;
+}
+.resource-hero-compact h1 {
+  font-size: clamp(32px, 4vw, 52px);
+  margin: 20px 0 14px;
+}
+.resource-hero-compact p {
+  font-size: 12px;
+  max-width: 480px;
+}
+.resource-hero-compact .resource-radar {
+  width: 490px;
+  height: 490px;
+  right: -10px;
+}
+.resource-path {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 30px;
+}
+.resource-path > a {
+  font-size: 11px;
+  border-radius: 100px;
+  padding: 12px 17px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #626262;
+  border: 1px solid #d7d4ce;
+}
+.resource-path > a:first-child {
+  border: 0;
+  margin-right: auto;
+  padding-left: 0;
+}
+.resource-path > a[aria-current] {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+.resource-path > a > span:first-child {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+}
+.calculator-page .calc-inputs,
+.calculator-page .calc-results {
+  border-radius: 28px;
+}
+.calculator-page .calc-results {
+  background: #ecf4f8;
+  border-color: #d1dfe6;
+}
+.calculator-page .calc-primary,
+.calculator-page .calc-print,
+.calculator-page .calc-toolbar button {
+  border-radius: 100px;
+}
+.calculator-page .calc-callout {
+  background: #f7fafb;
+}
+.calculator-page .calc-section h2 {
+  font-size: 18px;
+}
+.calculator-page .result-hero {
+  font-family: "Plus Jakarta Sans Variable", sans-serif;
+  font-size: 60px;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+}
+.calculator-page .result-empty h2 {
+  font-size: 27px;
+}
+.calculator-page .calc-toolbar {
+  padding: 0 5px;
+}
+.calculator-page .calc-section-title > span {
+  border: 1px solid #dacaca;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.calculator-page .calc-field {
+  font-weight: 400;
+}
+.calculator-page .calc-field input {
+  font-size: 15px;
+}
+.calculator-page .calc-field > div,
+.calculator-page .calc-field select {
+  border-radius: 10px;
+}
+.calculator-page .calc-primary {
+  font-weight: 400;
+}
+.calculator-page .calc-print:hover,
+.calculator-page .calc-toolbar button:hover {
+  background: #e3e9e9;
+}
+.workflow-panel,
+.guide-topics {
+  margin-top: 65px;
+  scroll-margin-top: 25px;
+}
+.workflow-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 24px;
+}
+.workflow-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.workflow-controls button {
+  border: 1px solid #d8d9d4;
+  border-radius: 100px;
+  background: transparent;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 21px;
+  text-align: left;
+  font:
+    400 13px "Plus Jakarta Sans Variable",
+    sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.workflow-controls button > span:first-child {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+}
+.workflow-controls button > span:last-child {
+  margin-left: auto;
+}
+.workflow-controls button[aria-pressed="true"] {
+  background: #333;
+  color: white;
+  border-color: #333;
+}
+.workflow-controls button:hover:not([aria-pressed="true"]) {
+  background: #ecf4f8;
+}
+.workflow-detail {
+  border: 1px solid #d5dce0;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #faf9f6;
+}
+.workflow-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(30px, 6vw, 85px);
+  padding: 36px 20px;
+  background: #ecf4f8;
+  position: relative;
+}
+.workflow-visual::before {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: #c3d4dc;
+  width: 65%;
+  top: 64px;
+}
+.workflow-visual > div {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+}
+.workflow-node {
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  background: #f7fafb;
+  border: 1px solid #b8cdd6;
+  color: #45636e;
+  font-size: 24px;
+}
+.workflow-visual > div:last-child .workflow-node {
+  background: #333;
+  color: #f3e454;
+  border-color: #333;
+}
+.workflow-visual small {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.05em;
+  color: #50626a;
+}
+.workflow-copy {
+  padding: 35px;
+}
+.workflow-copy h3 {
+  font-size: 30px;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  margin: 14px 0;
+}
+.workflow-copy > p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #626262;
+  max-width: 640px;
+}
+.workflow-takeaway {
+  border-left: 2px solid #bd0c0c;
+  padding: 6px 0 6px 18px;
+  margin: 25px 0;
+}
+.workflow-takeaway > span {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #626262;
+  letter-spacing: 0.1em;
+}
+.workflow-takeaway p {
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+.workflow-copy .resource-inline-link {
+  margin-bottom: 8px;
+}
+.resource-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+.resource-note-card {
+  background: #faf9f6;
+  border: 1px solid #dadbd5;
+  border-radius: 28px;
+  padding: 35px;
+}
+.resource-note-card h2 {
+  font-size: 25px;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+  margin: 16px 0;
+}
+.resource-note-card p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #626262;
+}
+.resource-note-card .resource-inline-link {
+  margin-top: 15px;
+}
+.resource-note-ice {
+  background: #ecf4f8;
+  border-color: #d2dfe4;
+}
+.ratio-lab {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  border: 1px solid #d4dde0;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-top: 35px;
+  background: #faf9f6;
+  scroll-margin-top: 25px;
+}
+.ratio-lab-inputs {
+  padding: 40px;
+}
+.ratio-lab-inputs h2 {
+  font-size: 31px;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  margin: 15px 0;
+}
+.ratio-lab-inputs > p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #626262;
+}
+.ratio-lab label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin: 30px 0 12px;
+  font-size: 12px;
+}
+.ratio-lab label output {
+  font:
+    13px "IBM Plex Mono",
+    monospace;
+}
+.ratio-lab input[type="range"] {
+  width: 100%;
+  height: 24px;
+  accent-color: #bd0c0c;
+  cursor: pointer;
+}
+.range-caps {
+  display: flex;
+  justify-content: space-between;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #626262;
+}
+.lab-reset {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #9caaa9;
+  padding: 6px 0;
+  color: #333;
+  font:
+    400 11px "Plus Jakarta Sans Variable",
+    sans-serif;
+  cursor: pointer;
+}
+.ratio-lab-result {
+  background: #ecf4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 36px;
+  text-align: center;
+}
+.ratio-orbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 255px;
+  height: 255px;
+  margin: 20px 0;
+  border: 1px solid #c3d8e1;
+  border-radius: 50%;
+}
+.ratio-orbit::before {
+  content: "";
+  position: absolute;
+  inset: 17px;
+  border: 1px solid #d5e3e9;
+  border-radius: 50%;
+}
+.ratio-orbit-ring {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #bd0c0c;
+  top: 30px;
+  right: 36px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px #bd0c0c0c;
+}
+.ratio-orbit > div {
+  display: grid;
+  gap: 12px;
+}
+.ratio-orbit output {
+  font-size: 57px;
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  color: #333;
+  line-height: 1;
+}
+.ratio-orbit output small {
+  font-size: 28px;
+}
+.ratio-orbit > div > span {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #626262;
+  letter-spacing: 0.13em;
+}
+.lab-equation {
+  display: flex;
+  gap: 15px;
+  font:
+    12px "IBM Plex Mono",
+    monospace;
+}
+.lab-equation > span {
+  color: #626262;
+}
+.ratio-lab-result > p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #454f53;
+  max-width: 310px;
+}
+.resource-topic {
+  border-bottom: 1px solid #cfceca;
+}
+.resource-topic:first-of-type {
+  border-top: 1px solid #cfceca;
+}
+.resource-topic summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  padding: 25px 8px;
+}
+.resource-topic summary::-webkit-details-marker {
+  display: none;
+}
+.topic-number {
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  color: #bd0c0c;
+}
+.resource-topic summary strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.resource-topic summary small {
+  display: block;
+  font-size: 11px;
+  color: #626262;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.topic-plus {
+  margin-left: auto;
+  font-size: 24px;
+  font-weight: 300;
+}
+.resource-topic[open] .topic-plus {
+  transform: rotate(45deg);
+}
+.resource-topic > p {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #565656;
+  margin: 0 60px 28px;
+  max-width: 790px;
+}
+.resource-review-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  margin-top: 55px;
+  padding: 40px;
+  background: #ecf4f8;
+  border-left: 3px solid #bd0c0c;
+}
+.resource-review-strip h2 {
+  font-size: 30px;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+  margin: 15px 0;
+}
+.resource-review-strip p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #565e62;
+  margin: 0 0 24px;
+}
+@media (max-width: 1000px) {
+  .resource-hero {
+    padding: 48px 36px;
+  }
+  .resource-hero h1 {
+    font-size: 48px;
+  }
+  .resource-radar {
+    right: -230px;
+  }
+  .workflow-layout {
+    grid-template-columns: 180px 1fr;
+  }
+  .resource-feature-rows > a {
+    gap: 8px;
+    padding: 16px;
+    font-size: 11px;
+  }
+  .graphic-finance {
+    padding-right: 100px;
+  }
+  .graphic-finance b {
+    right: 25px;
+    font-size: 21px;
+  }
+  .graphic-fraction {
+    width: 125px;
+  }
+  .ratio-lab-inputs,
+  .ratio-lab-result {
+    padding: 28px;
+  }
+  .resource-hero-compact h1 {
+    font-size: 44px;
+  }
+}
+@media (max-width: 700px) {
+  .resource-page {
+    padding-top: 20px;
+  }
+  .resource-hero {
+    padding: 35px 25px;
+    min-height: 440px;
+    border-radius: 24px;
+  }
+  .resource-hero h1 {
+    font-size: clamp(32px, 7vw, 46px);
+    margin: 24px 0 20px;
+  }
+  .resource-hero p {
+    font-size: 12px;
+  }
+  .resource-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.03em;
+  }
+  .resource-radar {
+    width: 500px;
+    height: 500px;
+    right: -250px;
+    top: 65%;
+  }
+  .hero-coordinate {
+    display: none;
+  }
+  .resource-actions {
+    gap: 10px;
+  }
+  .resource-pill {
+    font-size: 11px;
+    padding: 13px 18px;
+    gap: 16px;
+  }
+  .workbench-tools,
+  .resource-bottom-grid,
+  .resource-review-strip,
+  .ratio-lab {
+    grid-template-columns: 1fr;
+  }
+  .workbench-graphic {
+    height: 165px;
+  }
+  .workbench-card-copy {
+    padding: 25px;
+  }
+  .workbench-bridge {
+    padding: 25px;
+    margin-top: 35px;
+  }
+  .workbench-bridge h2 {
+    font-size: 28px;
+  }
+  .resource-feature-rows {
+    grid-template-columns: 1fr;
+  }
+  .resource-feature-rows > a {
+    font-size: 12px;
+    padding: 18px;
+  }
+  .resource-hero-compact {
+    min-height: 285px;
+    padding: 30px 25px;
+  }
+  .resource-hero-compact h1 {
+    font-size: 34px;
+  }
+  .resource-hero-compact .resource-radar {
+    right: -220px;
+  }
+  .resource-path {
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .resource-path > a {
+    font-size: 10px;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .resource-path > a:first-child {
+    width: 100%;
+    padding-bottom: 3px;
+  }
+  .resource-section-heading {
+    display: block;
+  }
+  .resource-section-heading h2 {
+    font-size: 28px;
+  }
+  .resource-section-heading > p {
+    max-width: none;
+  }
+  .workflow-panel,
+  .guide-topics {
+    margin-top: 40px;
+  }
+  .workflow-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .workflow-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .workflow-controls button {
+    padding: 15px;
+    font-size: 11px;
+    gap: 10px;
+  }
+  .workflow-copy {
+    padding: 25px;
+  }
+  .workflow-copy h3 {
+    font-size: 25px;
+  }
+  .workflow-visual {
+    gap: 25px;
+    padding: 25px 15px;
+  }
+  .workflow-visual::before {
+    top: 53px;
+  }
+  .workflow-visual small {
+    font-size: 7px;
+  }
+  .resource-note-card {
+    padding: 25px;
+  }
+  .ratio-lab-inputs {
+    padding: 25px;
+  }
+  .ratio-lab-inputs h2 {
+    font-size: 27px;
+  }
+  .ratio-lab-result {
+    padding: 30px 20px;
+  }
+  .ratio-orbit {
+    width: 220px;
+    height: 220px;
+  }
+  .lab-equation {
+    font-size: 11px;
+    gap: 10px;
+  }
+  .resource-topic summary {
+    gap: 16px;
+  }
+  .resource-topic summary strong {
+    font-size: 16px;
+  }
+  .resource-topic > p {
+    margin: 0 22px 25px 38px;
+    font-size: 12px;
+  }
+  .resource-review-strip {
+    padding: 25px;
+    gap: 15px;
+  }
+  .calculator-page .result-hero {
+    font-size: 50px;
+  }
+  .calculator-page .calc-inputs,
+  .calculator-page .calc-results {
+    border-radius: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep {
+    animation: none;
+  }
+  .resource-page *,
+  .resource-page *::before,
+  .resource-page *::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media print {
+  .resource-hero,
+  .resource-path {
+    display: none;
+  }
+  .resource-page {
+    padding-top: 0;
+  }
+  .calculator-page .calc-results {
+    background: white;
+  }
+}

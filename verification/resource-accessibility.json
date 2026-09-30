@@ -1,0 +1,32 @@
+[
+  {
+    "route": "/dscr-guide",
+    "lighthouseVersion": "13.5.0",
+    "accessibility": 100,
+    "failedAudits": []
+  },
+  {
+    "route": "/calculators",
+    "lighthouseVersion": "13.5.0",
+    "accessibility": 100,
+    "failedAudits": []
+  },
+  {
+    "route": "/calculators/dscr",
+    "lighthouseVersion": "13.5.0",
+    "accessibility": 100,
+    "failedAudits": []
+  },
+  {
+    "route": "/calculators/cash-flow",
+    "lighthouseVersion": "13.5.0",
+    "accessibility": 100,
+    "failedAudits": []
+  },
+  {
+    "route": "/how-it-works",
+    "lighthouseVersion": "13.5.0",
+    "accessibility": 100,
+    "failedAudits": []
+  }
+]

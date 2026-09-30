@@ -29,7 +29,7 @@ test("REvestor header uses original griffin with live two-line type at responsiv
     await page.setViewportSize({ width, height: 1000 });
     await page.goto("/");
     const brand = page.getByRole("link", {
-      name: "Griffin Funding REvestor home",
+      name: /Griffin Funding RE\s?vestor home/,
       exact: true,
     });
     await expect(brand).toBeVisible();

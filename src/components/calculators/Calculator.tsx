@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { PageHero, ResourcePath } from "@/components/resources/PageHero";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -101,32 +102,23 @@ export function Calculator({ kind }: { kind: "dscr" | "cashflow" }) {
       );
   }
   return (
-    <main className="wrap">
-      <div className="tool-intro">
-        <Link className="eyebrow" href="/calculators/">
-          CALCULATORS / {kind === "dscr" ? "FINANCING" : "OPERATIONS"}
-        </Link>
-        <h1>
-          {kind === "dscr" ? (
-            <>
-              Know the rent.
-              <br />
-              <em>Model the financing.</em>
-            </>
-          ) : (
-            <>
-              Beyond the payment.
-              <br />
-              <em>See the cash flow.</em>
-            </>
-          )}
-        </h1>
-        <p>
-          {kind === "dscr"
-            ? "Compare purchase and refinance scenarios with long-term or short-term rental income. Every assumption stays in view."
-            : "See what remains after vacancy, property expenses and the loan payment. Separate the investment economics from the financing ratio."}
-        </p>
-      </div>
+    <main className="wrap resource-page calculator-page">
+      <PageHero
+        compact
+        eyebrow={
+          kind === "dscr"
+            ? "financing / scenario builder"
+            : "operations / investment economics"
+        }
+        title={kind === "dscr" ? "Know the rent." : "Beyond the payment."}
+        accent={kind === "dscr" ? "Model the financing." : "See the cash flow."}
+        description={
+          kind === "dscr"
+            ? "Compare purchase and refinance scenarios, rental strategies and payment structures. Every assumption stays in view."
+            : "Account for vacancy, property expenses and the loan payment. See the economics behind your investment."
+        }
+      />
+      <ResourcePath active={kind} />
       <div className="calc-toolbar">
         <span>
           {origin

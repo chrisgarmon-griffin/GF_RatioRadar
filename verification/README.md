@@ -5,7 +5,7 @@
 - `npm run typecheck`: passed.
 - `npm test`: 64 tests passed, including URL state and demo-webhook suppression.
 - `npm run build`: passed with Node 22, Next.js 16.3.7.
-- `npm run test:e2e`: 25 tests passed against the production build in Chrome.
+- `npm run test:e2e`: 30 tests passed against the production build in Chrome.
 - axe WCAG 2 A/AA and 2.1 AA checks: no violations in tested desktop/mobile galleries, dialogs and calculator layouts. This is automated coverage, not a complete accessibility certification.
 - 320, 390, 768 and 1440px layouts checked. No page horizontal overflow; wide comparison tables scroll within their region.
 - No browser page errors in the gallery test. Images decode correctly and failure fallback works.
@@ -47,3 +47,12 @@ Vercel build/alias verification and production read-only smoke results are repor
 - Original griffin and two-line lettering visually reviewed on desktop/mobile. `revestor-brand-*.png` contains exact captures.
 - Independent source review confirmed existing calculator math, fixture photos, demo-first lead suppression and attribution paths were unchanged. Live provider configuration was not changed. Tests use injected transports; no paid vendor calls were made.
 - Known gaps: HouseCanary needs licensed listing inputs and authenticated account acceptance. BankingBridge prototype cannot make live requests and is rejected by the production registry. Chrome extension document is reference only.
+
+## Interactive resource UI
+
+- Scoped visual redesign across the calculator hub, DSCR, cash flow, How It Works and DSCR Guide.
+- Walkthrough controls, slider arithmetic/reset, native topic expansion, keyboard operation and reduced-motion behavior tested.
+- No page overflow at 320px; desktop/mobile resource and calculator layouts visually reviewed.
+- Calculator model and backend behavior unchanged; 64 unit tests retained.
+- Wordmark labels now derive from visible text, with a hidden home suffix, after Lighthouse's detailed label-content audit. The responsive branding test was rerun after this final adjustment.
+- See `docs/RESOURCE-UI.md` and `resource-accessibility.json` for adaptations and audit evidence.

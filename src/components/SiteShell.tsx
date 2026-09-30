@@ -18,7 +18,7 @@ function Brand() {
         priority
       />
       <span>
-        GRIFFIN FUNDING<small>ratioradar</small>
+        GRIFFIN FUNDING{" "}<small>ratioradar</small>
       </span>
     </Link>
   );
@@ -50,7 +50,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <Link
             className="revestor-brand"
             href="/"
-            aria-label="Griffin Funding REvestor home"
           >
             <Image
               src="/brand/griffin-wings.png"
@@ -61,11 +60,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               sizes="64px"
             />
             <span className="revestor-wordmark">
-              <span className="revestor-parent">Griffin Funding</span>
+              <span className="revestor-parent">Griffin Funding{" "}</span>
               <span className="revestor-name">
                 <span>RE</span>vestor
               </span>
             </span>
+            <span className="sr-only"> home</span>
           </Link>
           <nav aria-label="Primary">
             {links.map(([href, label]) => (
