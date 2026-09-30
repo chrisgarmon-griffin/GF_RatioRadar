@@ -27,6 +27,7 @@ export interface RentEstimate {
   monthlyRent: number;
   low?: number;
   high?: number;
+  fsd?: number;
   source: string;
 }
 
@@ -38,6 +39,8 @@ export interface RateQuote {
 }
 
 export interface RateRequest {
+  /** Representative scenario amount, not a property-specific quote. */
+  loanAmount?: number;
   interestOnly: boolean;
   fortyYear: boolean;
   downPct: number;
@@ -52,3 +55,16 @@ export interface RentProvider {
 export interface RateProvider {
   quote(r: RateRequest): Promise<RateQuote>;
 }
+
+export class ProviderError extends Error {
+  constructor(
+    public provider: string,
+    message: string,
+    public status?: number,
+  ) {
+    super(`${provider}: ${message}`);
+    this.name = "ProviderError";
+  }
+}
+/** Explicit vendor no-data outcome, distinct from auth, quota and transport failures. */
+export class RentUnavailableError extends ProviderError {}

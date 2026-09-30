@@ -1,16 +1,48 @@
 import { fixtureListings, fixtureRate, fixtureRent } from "./fixtures";
+import { createHouseCanaryRent } from "./housecanary";
 import type { ListingProvider, RateProvider, RentProvider } from "./types";
 
 /**
- * Provider registry. "live" implementations (Constellation, HouseCanary, BankingBridge)
- * are not built yet; selecting them fails loudly instead of silently serving fixtures.
+ * Provider registry. Live providers are chosen by env and never fall back to fixtures: a misconfigured
+ * live provider throws so the API returns an error instead of showing sample numbers as real ones.
  */
-function pick<T>(name: string, env: string | undefined, fixture: T): T {
-  if (!env || env === "fixture") return fixture;
-  throw new Error(`${name} provider "${env}" is not implemented yet`);
+function need(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`${name} is required for this provider`);
+  return v;
 }
 
-export const listings = (): ListingProvider => pick("listings", process.env.LISTINGS_PROVIDER, fixtureListings);
-export const rents = (): RentProvider => pick("rent", process.env.RENT_PROVIDER, fixtureRent);
-export const rates = (): RateProvider => pick("rate", process.env.RATE_PROVIDER, fixtureRate);
+let rentSingleton: RentProvider | undefined;
+
+export const listings = (): ListingProvider => {
+  const p = process.env.LISTINGS_PROVIDER;
+  if (!p || p === "fixture") return fixtureListings;
+  throw new Error(`listings provider "${p}" is not implemented yet`);
+};
+
+export const rents = (): RentProvider => {
+  const p = process.env.RENT_PROVIDER;
+  if (!p || p === "fixture") return fixtureRent;
+  if (p === "housecanary") {
+    if (process.env.NEXT_PUBLIC_DEMO_MODE !== "false")
+      throw new Error("Live rent lookups are disabled in demo mode");
+    return (rentSingleton ??= createHouseCanaryRent({
+      key: need("HOUSECANARY_API_KEY"),
+      secret: need("HOUSECANARY_API_SECRET"),
+    }));
+  }
+  throw new Error(`rent provider "${p}" is not implemented`);
+};
+
+export const rates = (): RateProvider => {
+  const p = process.env.RATE_PROVIDER;
+  if (!p || p === "fixture") return fixtureRate;
+  if (p === "bankingbridge") {
+    throw new Error(
+      "BankingBridge prototype is not a live pricing integration. Account-specific DSCR mapping and rate-card selection must be verified first.",
+    );
+  }
+  throw new Error(`rate provider "${p}" is not implemented`);
+};
+
 export * from "./types";

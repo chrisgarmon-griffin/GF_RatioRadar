@@ -3,9 +3,9 @@
 ## Acceptance result
 - `npm run lint`: passed, no warnings.
 - `npm run typecheck`: passed.
-- `npm test`: 39 tests passed, including URL state and demo-webhook suppression.
+- `npm test`: 64 tests passed, including URL state and demo-webhook suppression.
 - `npm run build`: passed with Node 22, Next.js 16.3.7.
-- `npm run test:e2e`: 23 tests passed against the production build in Chrome.
+- `npm run test:e2e`: 25 tests passed against the production build in Chrome.
 - axe WCAG 2 A/AA and 2.1 AA checks: no violations in tested desktop/mobile galleries, dialogs and calculator layouts. This is automated coverage, not a complete accessibility certification.
 - 320, 390, 768 and 1440px layouts checked. No page horizontal overflow; wide comparison tables scroll within their region.
 - No browser page errors in the gallery test. Images decode correctly and failure fallback works.
@@ -38,3 +38,12 @@ Vercel build/alias verification and production read-only smoke results are repor
 - Source review completed across adapter, handoff, calculator, shared shell and property handoff. No new backend writes, external calculator scripts or guideline assumptions disguised as requirements.
 - `calculator-{320,390,768,1440}.png` and `footer-{320,390,768,1440}.png` capture the added interfaces. Full-page captures may omit offscreen lazy images; footer-specific captures show the loaded skyline. Desktop and mobile footer images visually reviewed.
 - Two initial contrast failures were corrected; the final suite reports zero violations in tested states.
+
+## Selective archive merge verification
+
+- Imported archive reviewed against deployed baseline `57852ae`; merge decisions in `docs/ARCHIVE-MERGE-2026-09-30.md`.
+- `archive-merge-checks.log`: lint, TypeScript, 64 unit tests and production build passed.
+- Browser suite: 25 passed, including incomplete results, missing-rent empty state and live-text REvestor header at 320/390/768/1440 widths.
+- Original griffin and two-line lettering visually reviewed on desktop/mobile. `revestor-brand-*.png` contains exact captures.
+- Independent source review confirmed existing calculator math, fixture photos, demo-first lead suppression and attribution paths were unchanged. Live provider configuration was not changed. Tests use injected transports; no paid vendor calls were made.
+- Known gaps: HouseCanary needs licensed listing inputs and authenticated account acceptance. BankingBridge prototype cannot make live requests and is rejected by the production registry. Chrome extension document is reference only.

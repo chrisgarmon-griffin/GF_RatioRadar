@@ -140,6 +140,13 @@ export function ScenarioDialog({
               </span>
             </div>
           </div>
+          {rent.fsd !== undefined && (
+            <p className="hint">
+              Rent source: {rent.source}. Forecast standard deviation:{" "}
+              {(rent.fsd * 100).toFixed(1)}%. This measures model uncertainty,
+              not a guarantee of achievable rent.
+            </p>
+          )}
           <p className="need-note">
             {need.reachable
               ? `Modeled path to 1.0: ${pct(need.downPct)} down (${money(need.downPayment)}) at this scenario’s rate. A different down payment may change actual pricing.`

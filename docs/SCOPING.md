@@ -88,8 +88,8 @@ Three answers unlock the build:
 |---|---|---|
 | Active listings | Existing Revestor feed, or Constellation / IDX | Blocked on section 5 |
 | Photos | Listing media if licensed, else Street View live render as fallback | Blocked on section 5 |
-| Rent | HouseCanary (locked); HUD and Census as cross-check | Adapter to build |
-| Rate | BankingBridge (locked) | Adapter to build |
+| Rent | HouseCanary (locked); HUD and Census as cross-check | Adapter merged and contract-checked; no authenticated account verification |
+| Rate | BankingBridge (locked) | Archive prototype preserved test-only; live activation blocked pending verified account mapping |
 | Tax and insurance | Census county tax data replaces the 1.10% placeholder | To build |
 
 Free and public data cannot supply "for sale" status, so it cannot carry the MVP alone. It reduces the paid bill and feeds SEO pages. Full source table, costs and confidence labels are in the audit.

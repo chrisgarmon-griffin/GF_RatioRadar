@@ -413,12 +413,19 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
           </span>
           <span>
             {data && !loading
-              ? `Sample rate ${(data.rate.rate * 100).toFixed(3)}% · ${data.rate.asOf}`
+              ? `${data.rate.source === "fixture" ? "Sample rate" : "Scenario rate"} ${(data.rate.rate * 100).toFixed(3)}% · ${data.rate.asOf}`
               : "Sample pricing"}{" "}
             · HOA excluded
           </span>
         </div>
       </div>
+      {data && !loading && !error && data.skipped > 0 && (
+        <p className="partial-results" role="status">
+          {data.skipped} {data.skipped === 1 ? "property is" : "properties are"}{" "}
+          omitted because a rent estimate is unavailable. Results are
+          incomplete; no rent values were substituted.
+        </p>
+      )}
       <div className="results-heading">
         <div>
           <div className="eyebrow">
@@ -514,11 +521,17 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
         ) : rows.length === 0 ? (
           <div className="state-box">
             <Icon name="search" />
-            <h3>No properties in this view.</h3>
+            <h3>
+              {data && data.skipped > 0
+                ? "No priced properties in this view."
+                : "No properties in this view."}
+            </h3>
             <p>
-              {p.mode === "inverse"
-                ? "Try a larger down payment or a different loan structure to explore more 1.0 scenarios."
-                : "Try a broader budget, a different market, or clear the ZIP code."}
+              {data && data.skipped > 0
+                ? "Some properties could not be assessed because rent estimates were unavailable. Try again later or broaden your search."
+                : p.mode === "inverse"
+                  ? "Try a larger down payment or a different loan structure to explore more 1.0 scenarios."
+                  : "Try a broader budget, a different market, or clear the ZIP code."}
             </p>
             <button className="btn btn-ink" onClick={() => apply(DEFAULTS)}>
               Reset search <Icon name="arrow" />

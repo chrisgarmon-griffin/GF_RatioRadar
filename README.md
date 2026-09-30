@@ -15,7 +15,7 @@ npm run typecheck
 ## What exists
 
 - `src/lib/dscr.ts`: pure DSCR math. Ratio, interest-only, 40-year, and closed-form required down payment to hit 1.0.
-- `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture (sample) implementations only. Live Constellation, HouseCanary, and BankingBridge adapters plug in here; selecting one today throws rather than serving fake data silently.
+- `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture implementations plus a HouseCanary adapter with documented response validation, bounded caching and typed errors. Live listings are not implemented; BankingBridge remains a test-only prototype. Demo mode prevents live rent lookup.
 - `src/lib/search.ts` and `POST /api/search`: forward mode (ratio per listing) and inverse mode (listings that reach 1.0 within the down payment the buyer will bring, sorted by lowest down).
 - `src/app/page.tsx` and `src/components/`: landing page, search, listing cards, lead dialog.
 - `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Demo mode stores nothing; live mode uses a configured webhook, or a local development file. Vercel live mode without a webhook fails rather than losing leads.
@@ -60,3 +60,7 @@ Next.js remains the application framework. Routes: `/`, `/calculators`, `/calcul
 The supplied Griffin wings logo and the requested black/red wordmark appear in the shared header and skyline footer. DSCR supports purchase/refinance, long-term/short-term rent, amortizing/interest-only payments and inverse loan buying power. Cash flow covers operating costs, NOI, cap rate and cash-on-cash return. Explicit browser-local handoffs connect properties to financing and financing to operations.
 
 Source provenance, assumptions, privacy and verified footer references: [calculator integration](docs/CALCULATOR-INTEGRATION.md). The original imported regression suite runs with `node src/lib/calculators/vendor/source-regression.mjs`.
+
+## September 30 selective archive merge
+
+The newer provider infrastructure from the Claude project archive is integrated without restoring its old UI or lead behavior. Partial rent coverage is visible in search results; provider failures return a recoverable error. The header now uses the original griffin with live Griffin Funding / REvestor typography. See [merge decisions and integration boundaries](docs/ARCHIVE-MERGE-2026-09-30.md). The [Chrome extension proposal](docs/CHROME_EXTENSION_OPTION.md) is reference material, not a delivered feature.
