@@ -3155,3 +3155,6 @@ input[type="checkbox"] {
     background: white;
   }
 }
+
+.header-logo{display:block;flex-shrink:0;width:310px;line-height:0}.header-logo img{width:100%;height:auto}
+@media(max-width:600px){.header-logo{width:180px}}
