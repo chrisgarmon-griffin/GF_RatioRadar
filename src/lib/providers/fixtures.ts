@@ -24,6 +24,7 @@ export const fixtureListings: ListingProvider = {
     return SAMPLE.filter(
       (s) =>
         q.states.includes(s.state) &&
+        (!q.zip || s.zip.startsWith(q.zip)) &&
         (q.minPrice === undefined || s.price >= q.minPrice) &&
         (q.maxPrice === undefined || s.price <= q.maxPrice),
     ).map(({ rent: _rent, ...listing }) => listing);

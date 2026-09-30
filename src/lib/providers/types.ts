@@ -17,6 +17,8 @@ export interface Listing {
 
 export interface ListingQuery {
   states: string[];
+  /** ZIP or ZIP prefix, e.g. "93706" or "937". */
+  zip?: string;
   minPrice?: number;
   maxPrice?: number;
 }

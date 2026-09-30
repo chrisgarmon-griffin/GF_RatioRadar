@@ -43,15 +43,27 @@ An investor searches homes for sale, sees one DSCR ratio per property, changes l
 
 ## 4. Status
 
-Built and pushed on branch `claude/focused-albattani-tjpabu`:
-- DSCR engine with 11 passing tests (ratio, interest-only, 40-year, closed-form down payment to reach 1.0).
-- Provider interfaces for listings, rent and rate, with fictional sample data. Selecting a live provider throws an error rather than serving fake data.
-- Search API (forward and inverse modes) and a working search page.
+MVP website built and pushed on branch `claude/focused-albattani-tjpabu`. It runs on fictional sample listings.
 
-Placeholders that need real inputs:
-- Tax 1.10% and insurance 0.45% of price.
-- Rate adjustments for interest-only, 40-year and higher down payment.
-- All 12 sample listings.
+Built:
+- Search by state (CA, TX, FL), ZIP, price range and down payment (20% to 50%).
+- Forward mode: DSCR per listing, with a low-to-high DSCR range from the rent range.
+- Inverse mode ("Find 1.0 deals"): listings that reach 1.0 within the buyer's down payment cap, sorted by lowest down payment.
+- Interest-only and 40-year toggles (mutually exclusive), required down payment per property.
+- Lead capture: "check my loan options" opens a form with consent language, honeypot, and attribution (listing, full search state, UTM, referrer). Leads write to `.data/leads.jsonl` for now.
+- Shareable search URLs, FAQ with structured data, robots.txt, sitemap, disclosures footer.
+- Griffin Track A styling. Checked in a browser at desktop and phone width with no console errors.
+- 20 automated tests (DSCR engine, search, lead validation).
+
+Before launch:
+- Real listings (section 5). Sample data is fictional.
+- BankingBridge rate (currently a fixed sample rate with invented adjusters) and HouseCanary rent (currently fixture).
+- Tax 1.10% and insurance 0.45% of price are placeholders.
+- NMLS number in the footer (`NEXT_PUBLIC_NMLS`). Required on a mortgage lender site, not set.
+- Compliance review of the consent text and disclosures. Both are drafts.
+- Conta fonts. The font files were not available, so the site uses the fallback stack. Add the font-face block from the Griffin brand build.
+- Lead handoff to the LOS or CRM. Replace `saveLead` in `src/lib/leads.ts`.
+- Application URL (`NEXT_PUBLIC_PREQUAL_URL`) shown after a lead is sent.
 
 ## 5. The gating question: listing rights
 

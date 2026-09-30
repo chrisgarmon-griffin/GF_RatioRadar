@@ -2,25 +2,30 @@ import { NextResponse } from "next/server";
 import { runSearch, type SearchParams } from "@/lib/search";
 
 const VALID_STATES = ["CA", "TX", "FL"];
+const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : undefined);
 
 export async function POST(req: Request) {
-  const body = (await req.json().catch(() => null)) as Partial<SearchParams> | null;
+  const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   if (!body) return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
 
-  const states = (body.states ?? VALID_STATES).filter((s) => VALID_STATES.includes(s));
+  const states = (Array.isArray(body.states) ? body.states : VALID_STATES).filter(
+    (s): s is string => typeof s === "string" && VALID_STATES.includes(s),
+  );
   const downPct = Number(body.downPct ?? 0.2);
+  const zip = typeof body.zip === "string" && /^\d{1,5}$/.test(body.zip) ? body.zip : undefined;
   if (!states.length || !(downPct >= 0.2 && downPct <= 0.5)) {
-    return NextResponse.json({ error: "Invalid states or downPct (0.20 to 0.50)" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid states or down payment (20% to 50%)" }, { status: 400 });
   }
 
-  const result = await runSearch({
+  const params: SearchParams = {
     states,
-    minPrice: body.minPrice,
-    maxPrice: body.maxPrice,
+    zip,
+    minPrice: num(body.minPrice),
+    maxPrice: num(body.maxPrice),
     mode: body.mode === "inverse" ? "inverse" : "forward",
-    interestOnly: Boolean(body.interestOnly),
-    fortyYear: Boolean(body.fortyYear) && !body.interestOnly,
+    interestOnly: body.interestOnly === true,
+    fortyYear: body.fortyYear === true && body.interestOnly !== true,
     downPct,
-  });
-  return NextResponse.json(result);
+  };
+  return NextResponse.json(await runSearch(params));
 }

@@ -17,7 +17,8 @@ npm run typecheck
 - `src/lib/dscr.ts`: pure DSCR math. Ratio, interest-only, 40-year, and closed-form required down payment to hit 1.0.
 - `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture (sample) implementations only. Live Constellation, HouseCanary, and BankingBridge adapters plug in here; selecting one today throws rather than serving fake data silently.
 - `src/lib/search.ts` and `POST /api/search`: forward mode (ratio per listing) and inverse mode (listings that reach 1.0 within the down payment the buyer will bring, sorted by lowest down).
-- `src/app/page.tsx`: search UI with the toggles.
+- `src/app/page.tsx` and `src/components/`: landing page, search, listing cards, lead dialog.
+- `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Writes `.data/leads.jsonl` until a CRM handoff exists.
 
 ## Assumptions to confirm
 
