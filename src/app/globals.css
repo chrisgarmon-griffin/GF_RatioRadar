@@ -4495,3 +4495,120 @@ input[type="checkbox"] {
   .rr-header { position: static; backdrop-filter: none; }
   .resource-hero::after { display: none; }
 }
+
+/* Centered brand tandem, light resource mastheads and balanced workbench. */
+.revestor-wordmark {
+  height: auto;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+.revestor-parent { white-space: nowrap; }
+.revestor-name { white-space: nowrap; }
+.resource-hero-light {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid #dedad3;
+}
+.resource-hero-light h1 { color: var(--ink); }
+.resource-hero-light h1 em,
+.resource-hero-light h1 .hero-accent-red { color: var(--red); }
+.resource-hero-light p { color: #45413e; }
+.resource-hero-light .resource-eyebrow {
+  background: #faeaea;
+  color: #a70b0b;
+  border: 1px solid #efcece;
+}
+.resource-hero-light .resource-radar {
+  background: radial-gradient(circle, #bd0c0c08, transparent 69%);
+}
+.resource-hero-light .resource-radar > i { border-color: #bd0c0c1c; }
+.resource-hero-light .radar-sweep {
+  background: conic-gradient(from 0deg, transparent 0deg 270deg, #bd0c0c04 300deg, #bd0c0c18 359deg, transparent 360deg);
+}
+.resource-hero-light .radar-axis {
+  background: linear-gradient(transparent calc(50% - .5px), #bd0c0c12 50%, transparent calc(50% + .5px)), linear-gradient(90deg, transparent calc(50% - .5px), #bd0c0c12 50%, transparent calc(50% + .5px));
+}
+.resource-hero-light :is(.radar-center, .radar-point) {
+  background: var(--red);
+  box-shadow: 0 0 0 7px #bd0c0c08;
+}
+.resource-hero-light .hero-coordinate { color: #625b57; }
+.resource-hero-light::after {
+  background-image: radial-gradient(#bd0c0c20 .7px, transparent .7px);
+}
+.resource-hero-light .resource-pill { background: var(--red); color: #fff; }
+.resource-hero-light .resource-pill-outline {
+  background: #fff;
+  color: var(--ink);
+  border-color: #bdb5b0;
+}
+.workbench-card { background: #fff; color: var(--ink); }
+.workbench-graphic {
+  height: 224px;
+  padding: var(--space-24);
+  border-bottom: 1px solid #e3ded7;
+  background: #f5f3ef;
+}
+.graphic-finance { padding-right: var(--space-24); color: var(--ink); }
+.finance-equation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-24);
+  width: 100%;
+}
+.finance-fraction {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-12);
+  font: 500 clamp(13px, 1.5vw, 18px)/1.5 var(--sans);
+  color: #393531;
+}
+.finance-fraction .graphic-fraction {
+  width: 100%;
+  min-width: 148px;
+  height: 2px;
+  background: var(--red);
+}
+.finance-equals { color: #625b57; font: 400 28px/1 var(--sans); }
+.finance-equation strong {
+  font: 500 clamp(32px, 3.2vw, 46px)/1 var(--sans);
+  letter-spacing: -.04em;
+  color: var(--red);
+}
+.graphic-cashflow { align-items: center; gap: var(--space-32); }
+.graphic-cashflow > div { justify-content: flex-end; height: 156px; color: #393531; font-size: 12px; }
+.graphic-cashflow i { width: 68px; height: 120px; background: #242321; }
+.graphic-cashflow > div:nth-child(2) i { height: 88px; background: #827b72; }
+.graphic-cashflow > div:nth-child(3) i { height: 40px; background: var(--red); }
+.workbench-card-copy {
+  align-items: center;
+  text-align: center;
+  padding: var(--space-32);
+}
+.workbench-card-copy .resource-label { color: #514b46; }
+.workbench-card h2 { color: #1a1816; }
+.workbench-card p { color: #45413e; max-width: 480px; }
+.workbench-card .resource-tags { justify-content: center; }
+.workbench-card .resource-tags li {
+  background: #f5f3ef;
+  color: #393531;
+  border-color: #ccc5bc;
+  font-size: 11px;
+}
+.workbench-card-action {
+  width: 100%;
+  justify-content: center;
+  gap: var(--space-16);
+}
+@media (max-width: 700px) {
+  .workbench-graphic { height: 208px; }
+  .workbench-card-copy { padding: var(--space-24); }
+  .finance-equation { gap: var(--space-16); }
+  .finance-fraction { font-size: 13px; }
+  .finance-fraction .graphic-fraction { min-width: 112px; }
+  .finance-equation strong { font-size: 32px; }
+  .graphic-cashflow { gap: var(--space-24); }
+  .graphic-cashflow i { width: 48px; }
+}

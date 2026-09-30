@@ -19,10 +19,15 @@ export default function Page() {
       <section className="workbench-tools" aria-label="Choose a calculator">
         <Link href="/calculators/dscr/" className="workbench-card">
           <div className="workbench-graphic graphic-finance" aria-hidden="true">
-            <span>RENT</span>
-            <div className="graphic-fraction" />
-            <span>HOUSING PAYMENT</span>
-            <b>= DSCR</b>
+            <div className="finance-equation">
+              <div className="finance-fraction">
+                <span>Monthly rent</span>
+                <span className="graphic-fraction" />
+                <span>Housing payment</span>
+              </div>
+              <span className="finance-equals">=</span>
+              <strong>DSCR</strong>
+            </div>
           </div>
           <div className="workbench-card-copy">
             <span className="resource-label">01 / FINANCING</span>

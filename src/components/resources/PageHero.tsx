@@ -16,7 +16,7 @@ export function PageHero({
 }) {
   return (
     <section
-      className={`resource-hero${compact ? " resource-hero-compact" : ""}`}
+      className={`resource-hero${compact ? " resource-hero-compact" : " resource-hero-light"}`}
     >
       <div className="resource-radar" aria-hidden="true">
         <div className="radar-sweep" />
