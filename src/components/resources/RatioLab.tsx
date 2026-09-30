@@ -73,7 +73,7 @@ export function RatioLab() {
       <div className="ratio-lab-result">
         <span className="resource-label">RENT ÷ HOUSING PAYMENT</span>
         <div className="ratio-orbit">
-          <span className="ratio-orbit-ring" />
+          <span className="ratio-orbit-ring" aria-hidden="true" style={{ transform: `rotate(${Math.min(result, 2) * 180}deg) translateY(calc(-1 * var(--orbit-radius)))` }} />
           <div>
             <output aria-label="Illustrative DSCR">
               {result.toFixed(2)}

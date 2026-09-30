@@ -4379,3 +4379,119 @@ input[type="checkbox"] {
   display: inline-flex;
   align-items: center;
 }
+
+/* Ramp-inspired interaction craft, expressed in Griffin's existing palette. */
+:root {
+  --gold: #d7a224;
+  --motion-ui: 200ms cubic-bezier(.4, 0, .2, 1);
+}
+.rr-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #faf9f6ed;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.rr-navigation { min-height: 88px; }
+.rr-navigation nav a {
+  transition: color var(--motion-ui), border-color var(--motion-ui);
+}
+.rr-contact {
+  background: var(--ink);
+  color: var(--white);
+  border-radius: 8px;
+  padding: var(--space-8) var(--space-16);
+  transition: background-color var(--motion-ui), transform var(--motion-ui);
+}
+.resource-hero { background: #20201f; }
+.resource-radar {
+  background: radial-gradient(circle, #d7a22412, transparent 69%);
+}
+.resource-radar > i { border-color: #d7a22424; }
+.radar-sweep { animation-play-state: paused; }
+.motion-in-view .radar-sweep { animation-play-state: running; }
+.resource-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(#ffffff18 .7px, transparent .7px);
+  background-size: 10px 10px;
+  mask-image: linear-gradient(90deg, transparent 35%, black);
+}
+.resource-hero em { color: #e7c77b; }
+:is(.workbench-card, .resource-note-card, .specialist-card) {
+  transition: border-color var(--motion-ui), box-shadow var(--motion-ui), transform var(--motion-ui);
+}
+.workbench-graphic, .workflow-visual, .ratio-lab-result {
+  background-color: #f4f2ee;
+}
+.resource-note-ice, .resource-review-strip { background: #f4f2ee; border-color: #dedad3; }
+.workflow-node { background: #fff; border-color: #d4c8ad; color: #6c551f; }
+.workflow-visual > div:last-child .workflow-node { color: #e7c77b; background: var(--ink); }
+.workflow-visual::before { background: #d4c8ad; }
+:is(.resource-pill, .calc-primary, .specialist-apply, .btn, .icon-button) {
+  transition: background-color var(--motion-ui), color var(--motion-ui), transform var(--motion-ui);
+}
+:is(.resource-pill, .calc-primary, .specialist-apply, .rr-contact):active { transform: scale(.98); }
+:is(.resource-pill, .resource-inline-link) > span {
+  display: inline-block;
+  transition: transform var(--motion-ui);
+}
+.search-capsule {
+  transition: border-color var(--motion-ui), box-shadow var(--motion-ui);
+}
+.search-capsule:focus-within {
+  border-color: #bd0c0c66;
+  box-shadow: 0 0 0 4px #bd0c0c08;
+}
+:is(.calc-field input, .calc-field select) {
+  transition: border-color var(--motion-ui), box-shadow var(--motion-ui);
+}
+:is(.calc-field input, .calc-field select):focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px #bd0c0c08;
+}
+:is(.result-hero, .ratio-orbit output, .lab-equation, .office-clocks time) {
+  font-variant-numeric: tabular-nums;
+}
+.ratio-orbit { --orbit-radius: 110px; border-color: #d4c8ad; }
+.ratio-orbit::before { border-color: #ded5c3; }
+.ratio-orbit-ring {
+  top: 50%;
+  left: 50%;
+  right: auto;
+  margin-top: calc(-1 * var(--space-4));
+  margin-left: calc(-1 * var(--space-4));
+  transition: transform 220ms ease-out;
+  background: var(--red);
+}
+.topic-plus, .faq-list summary .icon { transition: transform var(--motion-ui); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :is(.workbench-card, .specialist-card):hover {
+    transform: translateY(-3px);
+    border-color: #cbb991;
+    box-shadow: 0 12px 32px #14131108;
+  }
+  .rr-contact:hover { background: var(--red); }
+  :is(.resource-pill, .resource-inline-link):hover > span { transform: translate(2px, -2px); }
+}
+@media (max-width: 900px) {
+  /* Keep the two-row navigation accessible without covering mobile content. */
+  .rr-header { position: relative; }
+}
+@media (max-width: 700px) {
+  .ratio-orbit { --orbit-radius: 93px; }
+  .rr-contact { font-size: 11px; padding: var(--space-8) var(--space-12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .radar-sweep { animation: none !important; }
+  *, *::before, *::after { transition-duration: 0s !important; }
+}
+@media print {
+  .rr-header { position: static; backdrop-filter: none; }
+  .resource-hero::after { display: none; }
+}

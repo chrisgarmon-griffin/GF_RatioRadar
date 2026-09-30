@@ -1,5 +1,6 @@
 "use client";
 import { Specialists } from "./Specialists";
+import { MotionLayer } from "./MotionLayer";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -47,6 +48,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }, []);
   return (
     <>
+      <MotionLayer />
       <a className="skip" href="#content">
         Skip to content
       </a>
