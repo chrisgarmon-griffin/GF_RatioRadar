@@ -10,7 +10,10 @@
     "test": "vitest run",
     "lint": "eslint .",
     "test:e2e": "playwright test",
-    "check": "npm run lint && npm run typecheck && npm test && npm run build"
+    "check": "npm run lint && npm run lint:styles && npm run typecheck && npm test && npm run build",
+    "lint:styles": "node scripts/check-layout-tokens.mjs",
+    "test:precision": "node scripts/precision-audit.mjs",
+    "test:engines": "playwright test --config=playwright.precision.config.ts"
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.3.0",

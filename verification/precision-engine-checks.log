@@ -1,0 +1,31 @@
+
+Running 14 tests using 3 workers
+
+(node:85548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85547) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85549) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [WebKit] › tests/calculators.spec.ts:51:5 › cash flow negative returns and zero denominators (1.0s)
+  ✓   2 [WebKit] › tests/calculators.spec.ts:3:5 › DSCR purchase, IO, STR and refinance calculate with correct displayed units (1.1s)
+  ✓   3 [WebKit] › tests/calculators.spec.ts:24:5 › DSCR handoff preserves payment and requires unknown operating inputs (1.2s)
+  ✓   5 [WebKit] › tests/resources.spec.ts:3:5 › workflow step controls reveal the corresponding action and context (570ms)
+  ✓   6 [WebKit] › tests/resources.spec.ts:13:5 › ratio lab reacts to keyboard input and resets; guide topics expand (607ms)
+  ✓   4 [WebKit] › tests/calculators.spec.ts:62:5 › property scenario reaches detailed calculator without silently adding unknown costs (758ms)
+(node:85598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [WebKit] › tests/specialists.spec.ts:29:5 › property scenario offers specialist selection alongside the estimate (406ms)
+(node:85607) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [Firefox] › tests/calculators.spec.ts:3:5 › DSCR purchase, IO, STR and refinance calculate with correct displayed units (1.2s)
+  ✓  10 [Firefox] › tests/calculators.spec.ts:51:5 › cash flow negative returns and zero denominators (1.1s)
+  ✓  12 [Firefox] › tests/resources.spec.ts:3:5 › workflow step controls reveal the corresponding action and context (594ms)
+  ✓   9 [Firefox] › tests/calculators.spec.ts:24:5 › DSCR handoff preserves payment and requires unknown operating inputs (1.4s)
+  ✓  11 [Firefox] › tests/calculators.spec.ts:62:5 › property scenario reaches detailed calculator without silently adding unknown costs (827ms)
+  ✓  13 [Firefox] › tests/resources.spec.ts:13:5 › ratio lab reacts to keyboard input and resets; guide topics expand (418ms)
+  ✓  14 [Firefox] › tests/specialists.spec.ts:29:5 › property scenario offers specialist selection alongside the estimate (420ms)
+
+  14 passed (5.6s)

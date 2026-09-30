@@ -1,0 +1,25 @@
+/* Shared geometry. 4px rhythm; extended 80/96/128 sizes serve section spacing.
+   Artwork offsets, image crops, border strokes, typography and graphic dimensions
+   are intentionally independent of content spacing. */
+:root {
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-128: 128px;
+  --page-gutter: var(--space-64);
+  --page-start: var(--space-32);
+  --section-gap: var(--space-48);
+  --card-gap: var(--space-24);
+  --card-padding: var(--space-24);
+  --card-radius: 24px;
+  --control-height: 44px;
+}
+@media (max-width: 1200px) { :root { --page-gutter: var(--space-32); } }
+@media (max-width: 700px) { :root { --page-gutter: var(--space-16); --section-gap: var(--space-32); } }
