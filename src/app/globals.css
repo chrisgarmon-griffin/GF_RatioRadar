@@ -2626,32 +2626,32 @@ input[type="checkbox"] {
 }
 .griffin-footer {
   background: #f0efeb;
-  padding-top: 90px;
-  margin-top: 90px;
+  padding-top: 32px;
+  margin-top: 32px;
   overflow: hidden;
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2.5fr 1fr 1fr;
-  gap: 65px;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
 }
 .footer-grid p {
   font-size: 13px;
   line-height: 1.8;
   color: #6c6963;
-  margin: 24px 0;
+  margin: 12px 0 16px;
 }
 .footer-grid h3 {
   font:
     11px "IBM Plex Mono",
     monospace;
   letter-spacing: 0.15em;
-  margin: 10px 0 35px;
+  margin: 4px 0 12px;
 }
-.footer-grid > div > a:not(.griffin-brand) {
+.footer-grid > div > a:not(.griffin-brand):not(.revestor-brand) {
   display: block;
   font-size: 14px;
-  margin: 18px 0;
+  margin: 10px 0;
   color: #625f59;
   text-decoration: none;
 }
@@ -2679,11 +2679,13 @@ input[type="checkbox"] {
   letter-spacing: 0.08em;
 }
 .footer-fine {
-  text-align: center;
-  margin-top: 75px;
-  max-width: 1000px;
+  text-align: left;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid #d8d6d0;
 }
 .footer-fine p {
+  margin: 5px 0;
   font-size: 11px;
   line-height: 1.8;
   color: #6c6963;
@@ -2702,7 +2704,7 @@ input[type="checkbox"] {
   position: relative;
   aspect-ratio: 1672/415;
   overflow: hidden;
-  margin-top: 30px;
+  margin-top: 12px;
 }
 .footer-skyline img {
   position: absolute;
@@ -2821,13 +2823,13 @@ input[type="checkbox"] {
     grid-column: 1/-1;
   }
   .footer-grid h3 {
-    margin-top: 30px;
+    margin-top: 4px;
   }
   .office-clocks {
     gap: 18px;
   }
   .footer-fine {
-    margin-top: 35px;
+    margin-top: 18px;
   }
   .footer-skyline {
     height: 250px;

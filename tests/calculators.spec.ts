@@ -112,8 +112,8 @@ test("all new routes return real content and navigation works", async ({
     const response = await page.goto(route);
     expect(response?.status()).toBe(200);
     await expect(page.locator("main h1")).toBeVisible();
-    await expect(page.locator(".griffin-brand").first()).toContainText(
-      "GRIFFIN FUNDING",
+    await expect(page.locator(".griffin-footer .revestor-brand")).toContainText(
+      "Griffin Funding",
     );
     await expect(page.locator(".griffin-footer")).not.toContainText("Pengon");
   }

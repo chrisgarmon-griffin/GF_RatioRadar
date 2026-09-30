@@ -6,22 +6,26 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 function Brand() {
   return (
-    <Link
-      className="griffin-brand"
-      href="/"
-      aria-label="Griffin Funding RatioRadar home"
-    >
-      <Image
-        src="/brand/griffin-wings.png"
-        width={78}
-        height={49}
-        alt=""
-        priority
-      />
-      <span>
-        GRIFFIN FUNDING{" "}<small>ratioradar</small>
-      </span>
-    </Link>
+<Link
+            className="revestor-brand"
+            href="/"
+          >
+            <Image
+              src="/brand/griffin-wings.png"
+              width={2078}
+              height={1310}
+              alt=""
+              priority
+              sizes="64px"
+            />
+            <span className="revestor-wordmark">
+              <span className="revestor-parent">Griffin Funding{" "}</span>
+              <span className="revestor-name">
+                <span>RE</span>vestor
+              </span>
+            </span>
+            <span className="sr-only"> home</span>
+          </Link>
   );
 }
 const links = [
@@ -48,26 +52,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </a>
       <header className="rr-header">
         <div className="wrap rr-navigation">
-          <Link
-            className="revestor-brand"
-            href="/"
-          >
-            <Image
-              src="/brand/griffin-wings.png"
-              width={2078}
-              height={1310}
-              alt=""
-              priority
-              sizes="64px"
-            />
-            <span className="revestor-wordmark">
-              <span className="revestor-parent">Griffin Funding{" "}</span>
-              <span className="revestor-name">
-                <span>RE</span>vestor
-              </span>
-            </span>
-            <span className="sr-only"> home</span>
-          </Link>
+          <Brand />
           <nav aria-label="Primary">
             {links.map(([href, label]) => (
               <Link
