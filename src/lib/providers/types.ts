@@ -10,7 +10,7 @@ export interface Listing {
   sqft: number;
   propertyType: "SFR" | "Condo" | "Townhome" | "2-4 Unit";
   daysOnMarket: number;
-  /** Constellation supplies no photos. Null means show the placeholder and outbound-link risk applies. */
+  /** Licensed listing media URL, or null for the accessible no-photo fallback. Fixture images are illustrative only. */
   photoUrl: string | null;
   source: string;
 }

@@ -1,11 +1,11 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { SearchParams, SearchRow } from "@/lib/search";
 import { money, pct, ratio } from "@/lib/format";
-
+import { DEMO } from "@/lib/config";
+import { Modal } from "./Modal";
+import { Icon } from "./Icon";
 const PREQUAL_URL = process.env.NEXT_PUBLIC_PREQUAL_URL;
-
 function utmFromLocation() {
   const out: Record<string, string> = {};
   new URLSearchParams(window.location.search).forEach((v, k) => {
@@ -13,128 +13,196 @@ function utmFromLocation() {
   });
   return out;
 }
-
 export function LeadDialog({
   row,
   params,
   onClose,
 }: {
-  row: SearchRow | null;
+  row: SearchRow;
   params: SearchParams;
   onClose: () => void;
 }) {
-  const ref = useRef<HTMLDialogElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
-  const [stored, setStored] = useState(true);
+  const [stored, setStored] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const d = ref.current;
-    if (!d) return;
-    if (row && !d.open) {
-      setStatus("idle");
-      setError(null);
-      d.showModal();
-    }
-    if (!row && d.open) d.close();
-  }, [row]);
-
-  const summary = row
-    ? `${row.listing.address}, ${row.listing.city}, ${row.listing.state} ${row.listing.zip}. ${money(row.listing.price)}. DSCR ${ratio(row.dscr)} at ${pct(params.downPct)} down.`
-    : "";
-
+  const pending = useRef<AbortController | null>(null);
+  useEffect(() => () => pending.current?.abort(), []);
+  const summary = `${row.listing.address}, ${row.listing.city}, ${row.listing.state} ${row.listing.zip}. ${money(row.listing.price)}. DSCR ${ratio(row.dscr)} at ${pct(params.downPct)} down.`;
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!row) return;
+    if (status === "sending") return;
     const f = new FormData(e.currentTarget);
     setStatus("sending");
     setError(null);
-    const res = await fetch("/api/leads", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        name: f.get("name"),
-        email: f.get("email"),
-        phone: f.get("phone"),
-        website: f.get("website"),
-        consent: f.get("consent") === "on",
-        listingId: row.listing.id,
-        listingSummary: summary,
-        search: params,
-        utm: utmFromLocation(),
-        referrer: document.referrer,
-      }),
-    }).catch(() => null);
-    if (res?.ok) {
-      setStored((await res.json().catch(() => null))?.stored !== false);
+    const ctrl = new AbortController();
+    pending.current = ctrl;
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        signal: ctrl.signal,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: f.get("name"),
+          email: f.get("email"),
+          phone: f.get("phone"),
+          website: f.get("website"),
+          consent: f.get("consent") === "on",
+          listingId: row.listing.id,
+          listingSummary: summary,
+          search: params,
+          utm: utmFromLocation(),
+          referrer: document.referrer,
+        }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error ?? "Please try again.");
+      setStored(body.stored === true);
       setStatus("done");
-    } else {
+    } catch (e) {
+      if (ctrl.signal.aborted) return;
       setStatus("idle");
-      setError((await res?.json().catch(() => null))?.error ?? "Something went wrong. Try again.");
+      setError(
+        e instanceof Error
+          ? e.message
+          : "We could not send your request. Please try again.",
+      );
     }
   }
-
   return (
-    <dialog ref={ref} onClose={onClose} aria-labelledby="lead-title">
-      {row && (
-        <div className="dlg">
-          {status === "done" ? (
-            <>
-              <h2 id="lead-title">{stored ? "Thanks. A loan officer will reach out." : "Demo mode: nothing was sent."}</h2>
-              <p className="sub">
-                {stored
-                  ? "We have your request for this property. Ratio Radar figures are estimates, and a loan officer will confirm the real numbers with you."
-                  : "This is a preview with sample listings. Your details were checked but not saved, and no one will contact you."}
-              </p>
-              <div className="row">
-                {PREQUAL_URL && (
-                  <a className="btn btn-primary" href={PREQUAL_URL} target="_blank" rel="noopener">
-                    start your application
-                  </a>
-                )}
-                <button className="btn btn-outline" type="button" onClick={onClose}>
-                  close
-                </button>
-              </div>
-            </>
-          ) : (
-            <form onSubmit={submit} className="dlg" style={{ padding: 0 }}>
-              <h2 id="lead-title">Check my loan options</h2>
-              <p className="sub">Tell us how to reach you and a Griffin loan officer will review this property with you.</p>
-              <div className="sum">{summary}</div>
-              <div className="field">
-                <label htmlFor="ld-name">Full name</label>
-                <input id="ld-name" name="name" type="text" autoComplete="name" required />
-              </div>
-              <div className="field">
-                <label htmlFor="ld-email">Email</label>
-                <input id="ld-email" name="email" type="email" autoComplete="email" required />
-              </div>
-              <div className="field">
-                <label htmlFor="ld-phone">Mobile phone</label>
-                <input id="ld-phone" name="phone" type="tel" autoComplete="tel" required />
-              </div>
-              <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-              <label className="check consent" style={{ alignItems: "flex-start" }}>
-                <input type="checkbox" name="consent" required />
+    <Modal title="GRIFFIN FUNDING / SCENARIO REVIEW" onClose={onClose}>
+      <div className="lead-content">
+        {status === "done" ? (
+          <>
+            <span className="success-icon">
+              <Icon name="check" />
+            </span>
+            <h2>
+              {stored
+                ? "Your request is with Griffin."
+                : "Preview complete. Nothing was sent."}
+            </h2>
+            <p>
+              {stored
+                ? "A loan officer will review the property and your scenario with you. Estimates remain subject to verification."
+                : "Your details were validated but not saved. No request was sent and no one will contact you."}
+            </p>
+            <div className="row">
+              {stored && PREQUAL_URL && (
+                <a
+                  className="btn btn-primary"
+                  href={PREQUAL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Start your application <Icon name="diagonal" />
+                </a>
+              )}
+              <button className="btn btn-ink" onClick={onClose}>
+                Back to properties
+              </button>
+            </div>
+          </>
+        ) : (
+          <form onSubmit={submit}>
+            <h2>
+              Bring your next move
+              <br />
+              into focus.
+            </h2>
+            <p>
+              {DEMO
+                ? "Try the review form. This preview does not save your details or contact a loan officer."
+                : "Share your details so a Griffin loan officer can review this property and scenario with you."}
+            </p>
+            <div className="lead-summary">
+              <Icon name="home" />
+              <div>
+                <strong>{row.listing.address}</strong>
                 <span>
-                  I agree that Griffin Funding may contact me by phone, text and email about this request, including
-                  with automated technology. Consent is not a condition of any loan. Message and data rates may apply.
+                  {row.listing.city}, {row.listing.state} ·{" "}
+                  {money(row.listing.price)}
                 </span>
-              </label>
-              {error && <p className="err" role="alert">{error}</p>}
-              <div className="row">
-                <button className="btn btn-outline" type="button" onClick={onClose}>
-                  cancel
-                </button>
-                <button className="btn btn-primary" type="submit" disabled={status === "sending"}>
-                  {status === "sending" ? "sending" : "send request"}
-                </button>
+                <small>
+                  Est. DSCR {ratio(row.dscr)}× · {pct(params.downPct)} down
+                </small>
               </div>
-            </form>
-          )}
-        </div>
-      )}
-    </dialog>
+            </div>
+            <div className="field">
+              <label htmlFor="ld-name">Full name</label>
+              <input
+                id="ld-name"
+                name="name"
+                autoComplete="name"
+                required
+                minLength={2}
+                maxLength={120}
+                placeholder="Your name"
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="ld-email">Email address</label>
+              <input
+                id="ld-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                maxLength={200}
+                placeholder="you@example.com"
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="ld-phone">Phone number</label>
+              <input
+                id="ld-phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                required
+                maxLength={30}
+                placeholder="(555) 555-0100"
+              />
+            </div>
+            <input
+              className="hp"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+            <label className="check consent">
+              <input type="checkbox" name="consent" required />
+              <span>
+                I agree that Griffin Funding may contact me by phone, text and
+                email about this request, including with automated technology.
+                Consent is not a condition of any loan. Message and data rates
+                may apply.
+              </span>
+            </label>
+            {error && (
+              <p className="form-error" role="alert">
+                {error}
+              </p>
+            )}
+            <button
+              className="btn btn-primary full"
+              type="submit"
+              disabled={status === "sending"}
+            >
+              {status === "sending"
+                ? "Checking your request…"
+                : DEMO
+                  ? "Try the preview form"
+                  : "Request a scenario review"}
+              <Icon name="arrow" />
+            </button>
+            <p className="hint">
+              Decision support only. A human underwriter reviews any loan
+              application.
+            </p>
+          </form>
+        )}
+      </div>
+    </Modal>
   );
 }

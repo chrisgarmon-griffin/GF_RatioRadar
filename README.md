@@ -18,7 +18,7 @@ npm run typecheck
 - `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture (sample) implementations only. Live Constellation, HouseCanary, and BankingBridge adapters plug in here; selecting one today throws rather than serving fake data silently.
 - `src/lib/search.ts` and `POST /api/search`: forward mode (ratio per listing) and inverse mode (listings that reach 1.0 within the down payment the buyer will bring, sorted by lowest down).
 - `src/app/page.tsx` and `src/components/`: landing page, search, listing cards, lead dialog.
-- `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Writes `.data/leads.jsonl` until a CRM handoff exists.
+- `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Demo mode stores nothing; live mode uses a configured webhook, or a local development file. Vercel live mode without a webhook fails rather than losing leads.
 
 ## Assumptions to confirm
 
@@ -33,6 +33,22 @@ Ratio Radar is the next version of Revestor (revestor.com), acquired by Griffin 
 
 ## Deployment
 
-Vercel project `ratio-radar` (Griffin Funding team), linked to this repo. The current deployment builds the `claude/focused-albattani-tjpabu` branch and is served at https://ratio-radar.vercel.app behind Vercel Authentication (team members only). The `main` branch is still the empty initial commit, so nothing deploys from it yet.
+Vercel project `ratio-radar` in the Griffin Funding team is connected to this repo. Production is deployed from `main` at https://ratio-radar.vercel.app. Feature branches receive preview deployments. Authentication and environment configuration are managed in Vercel and must be verified live before public release.
 
-Demo mode is on by default (`NEXT_PUBLIC_DEMO_MODE`): the site is `noindex`, shows a sample-data banner, and validates lead forms without storing them. Before a public launch: set `NEXT_PUBLIC_DEMO_MODE=false`, `LEAD_WEBHOOK_URL`, `NEXT_PUBLIC_NMLS` and `NEXT_PUBLIC_SITE_URL`, wire real listings, and merge to `main`.
+Demo mode is on by default (`NEXT_PUBLIC_DEMO_MODE`): noindex, explicit sample-data disclosures, and form validation without storage or webhook delivery. A configured webhook cannot override demo mode. Public launch still requires licensed live data, reviewed disclosures, a durable lead destination, NMLS and canonical-domain configuration.
+
+## Redesign and verification
+
+The property explorer combines an image-led bento gallery with Griffin's warm-paper/red editorial UI. It adds property comparison, detailed scenario breakdowns, table view, sorting, shareable filters, resilient loading/error states and mobile/keyboard support. See [design decisions and boundaries](docs/DESIGN-REDESIGN.md).
+
+Use Node 22 (`.nvmrc`):
+
+```sh
+npm ci
+npm run check
+npm run start -- --port 3123
+# In another terminal; local Chrome required:
+npm run test:e2e
+```
+
+Evidence: [verification/README.md](verification/README.md). Live providers and LOS Connector funded-loan attribution remain outside this UI release.

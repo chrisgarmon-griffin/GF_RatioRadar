@@ -1,102 +1,194 @@
-import { Mark } from "@/components/Mark";
+import Link from "next/link";
 import { Search } from "@/components/Search";
+import { Icon } from "@/components/Icon";
 import { FAQ } from "@/lib/faq";
+import { parseSearch } from "@/lib/search-url";
 import { DEMO } from "@/lib/config";
-
 const NMLS = process.env.NEXT_PUBLIC_NMLS;
-
-export default function Home() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-  };
-
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const query = await searchParams;
+  const parsed = new URLSearchParams();
+  Object.entries(query).forEach(([k, v]) => {
+    if (typeof v === "string") parsed.set(k, v);
+  });
   return (
     <>
-      <a className="skip" href="#search">Skip to search</a>
-      {DEMO && (
-        <div className="demo-bar" role="note">
-          Preview build. Listings, rents and rates are sample data, and requests are not sent.
-        </div>
-      )}
+      <a className="skip" href="#search">
+        Skip to property search
+      </a>
       <header className="nav">
-        <div className="wrap">
-          <a className="brand" href="/" aria-label="Ratio Radar home">
-            <Mark />
-            <span>Ratio Radar</span>
-          </a>
-          <nav className="navlinks sc" aria-label="Primary">
-            <a className="hide-sm" href="#how">how it works</a>
-            <a className="hide-sm" href="#faq">faq</a>
-            <a href="#search">search</a>
+        <div className="wrap nav-inner">
+          <Link className="brand" href="/" aria-label="Ratio Radar home">
+            <span className="brand-mark">
+              r<span>.</span>
+            </span>
+            <span className="brand-name">
+              ratio<span>radar</span>
+              <small>BY GRIFFIN FUNDING</small>
+            </span>
+          </Link>
+          <nav aria-label="Primary">
+            <a className="active" href="#search">
+              Explore properties
+            </a>
+            <a href="#how">How it works</a>
+            <a href="#faq">The DSCR guide</a>
           </nav>
+          <a className="nav-action" href="#search">
+            Find your next property <Icon name="diagonal" />
+          </a>
         </div>
       </header>
-
+      {DEMO && (
+        <div className="demo-bar" role="note">
+          <span className="status-dot" /> INTERACTIVE PREVIEW{" "}
+          <span className="demo-divider">/</span> Fictional properties.
+          Illustrative photos. Sample rents & rates. Requests are not sent.
+        </div>
+      )}
       <main>
-        <section className="hero">
-          <Mark className="wash" />
-          <div className="wrap">
-            <span className="eyebrow"><svg className="glyph" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="7" cy="7" r="2" fill="currentColor" /></svg>dscr property search</span>
-            <h1>Find the deals that <em>already work.</em></h1>
-            <p className="lede">
-              Every listing shows its DSCR. See which properties reach 1.0 at 20% down, and what interest-only, a
-              40-year term or more money down does to the rest.
+        <section className="intro wrap" aria-labelledby="page-title">
+          <div>
+            <div className="eyebrow">
+              <span className="red">01</span> THE INVESTMENT PROPERTY EXPLORER
+            </div>
+            <h1 id="page-title">
+              Find the property.
+              <br className="mobile-break" /> <em>Know the ratio.</em>
+            </h1>
+          </div>
+          <p>
+            Good investing starts with clear numbers. <br />
+            Explore properties through the lens of their rent
+            <br className="desktop-break" /> and financing, before you make your
+            next move.
+          </p>
+        </section>
+        <Search initialParams={parseSearch(parsed)} />
+        <section
+          className="how-section wrap"
+          id="how"
+          aria-labelledby="how-title"
+        >
+          <div className="section-heading">
+            <div>
+              <div className="eyebrow">
+                <span className="red">02</span> A CLEARER PATH FORWARD
+              </div>
+              <h2 id="how-title">From a possibility to a plan.</h2>
+            </div>
+            <p>
+              One property. A few assumptions.
+              <br />A much more informed conversation.
             </p>
-            <div className="cta-row">
-              <a className="btn btn-primary" href="#search">search properties</a>
-              <a className="btn btn-outline" href="?mode=inverse#search">show me 1.0 deals</a>
-            </div>
-            <div className="stat-block">
-              <span className="num">rent ÷ PITIA</span>
-              <span className="lab">DSCR of 1.0 means the rent covers the payment.</span>
-            </div>
+          </div>
+          <div className="steps">
+            {[
+              [
+                "01",
+                "Find your market",
+                "Browse by state, ZIP and budget. See the same financing scenario applied to every property.",
+              ],
+              [
+                "02",
+                "Work the numbers",
+                "Adjust your down payment or loan structure. Compare the estimated ratio and the rent range side by side.",
+              ],
+              [
+                "03",
+                "Bring it to Griffin",
+                "Carry your property and scenario into a conversation with a loan officer, who can review the actual terms.",
+              ],
+            ].map(([n, title, copy]) => (
+              <article key={n}>
+                <span className="step-index">{n}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
           </div>
         </section>
-
-        <Search />
-
-        <section className="section" id="how">
-          <div className="wrap">
-            <span className="eyebrow sc">how it works</span>
-            <h2>From search to loan officer in three steps</h2>
-            <div className="steps">
-              <div className="step"><span className="n">01</span><h3>Search</h3><p>Pick a state or ZIP and a price range. Each home for sale shows its DSCR at your down payment.</p></div>
-              <div className="step"><span className="n">02</span><h3>Reach 1.0</h3><p>Turn on interest-only or a 40-year term, or raise the down payment. Or flip to 1.0 deals and see the down payment each property needs.</p></div>
-              <div className="step"><span className="n">03</span><h3>Talk to a loan officer</h3><p>Send the property you like. A Griffin loan officer confirms the real rent, rate and terms.</p></div>
+        <section
+          className="guide-section wrap"
+          id="faq"
+          aria-labelledby="faq-title"
+        >
+          <div className="guide-intro">
+            <div className="eyebrow">
+              <span className="red">03</span> THE DSCR FIELD GUIDE
+            </div>
+            <h2 id="faq-title">
+              A little context.
+              <br />
+              <em>A better decision.</em>
+            </h2>
+            <p>
+              Understand what the ratio tells you, and what still needs a human
+              review.
+            </p>
+            <div className="formula">
+              <span>Monthly rent</span>
+              <span className="formula-line" />
+              <span>Estimated housing payment</span>
+              <b>= DSCR</b>
             </div>
           </div>
-        </section>
-
-        <section className="section faq" id="faq" style={{ paddingTop: 0 }}>
-          <div className="wrap">
-            <span className="eyebrow sc">faq</span>
-            <h2>DSCR loans, answered</h2>
-            {FAQ.map((f) => (
+          <div className="faq-list">
+            {FAQ.map((f, i) => (
               <details key={f.q}>
-                <summary>{f.q}</summary>
+                <summary>
+                  <span className="faq-index">0{i + 1}</span>
+                  {f.q}
+                  <Icon name="plus" />
+                </summary>
                 <p>{f.a}</p>
               </details>
             ))}
           </div>
         </section>
       </main>
-
-      <footer className="footer">
-        <div className="wrap legal">
-          <p>
-            Ratio Radar is provided by Griffin Funding.{NMLS ? ` NMLS #${NMLS}.` : ""} Equal Housing Opportunity.
-          </p>
-          <p>
-            DSCR figures are estimates: monthly rent divided by principal, interest, taxes and insurance, using
-            automated rent estimates, sample rates and assumed tax and insurance rates. They are not a loan offer, rate
-            quote or credit decision. All loans are subject to underwriting review and approval. Listings shown may be
-            sample data during the pilot.
-          </p>
+      <footer className="footer wrap">
+        <div className="footer-top">
+          <Link className="brand" href="/">
+            ratio<span className="red">radar</span>
+            <span className="footer-by">BY GRIFFIN FUNDING</span>
+          </Link>
+          <span>Property perspective. Financing clarity.</span>
+          <a href="#search">
+            Back to explore <Icon name="diagonal" />
+          </a>
         </div>
+        <p>
+          Ratio Radar is provided by Griffin Funding.
+          {NMLS ? ` NMLS #${NMLS}.` : ""} Equal Housing Opportunity.
+        </p>
+        <p>
+          Decision support only. Estimates are not a loan offer, rate quote, or
+          credit decision. This model divides monthly rent by principal,
+          interest, assumed property taxes and insurance. HOA dues, vacancy,
+          maintenance and other operating costs are not included. A ratio of 1.0
+          is an illustrative benchmark, not a qualification threshold. A human
+          underwriter must review the full loan scenario.
+        </p>
+        <p>
+          {DEMO
+            ? "Preview data and photos are illustrative and do not represent properties available for purchase. "
+            : ""}
+          Photography: Unsplash.{" "}
+          <a
+            href="/image-credits.txt"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Image sources
+          </a>
+          .
+        </p>
       </footer>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
     </>
   );
 }

@@ -1,4 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/plus-jakarta-sans";
+import "@fontsource-variable/newsreader";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
 import { DEMO } from "@/lib/config";
 
@@ -12,14 +16,19 @@ export const metadata: Metadata = {
   robots: DEMO ? { index: false, follow: false } : undefined,
   openGraph: {
     title: "Ratio Radar | Find Investment Properties by DSCR",
-    description: "See the DSCR on every listing and what it takes to reach 1.0.",
+    description:
+      "See the DSCR on every listing and what it takes to reach 1.0.",
     type: "website",
   },
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>{children}</body>

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { validateLead } from "./leads";
 
 const good = { name: "Ada Lovelace", email: "ada@example.com", phone: "(559) 555-0142", consent: true };
@@ -28,4 +28,17 @@ describe("saveLead in demo mode", () => {
     if (!r.ok) throw new Error("fixture invalid");
     expect(await saveLead(r.lead)).toEqual({ stored: false, where: "none" });
   });
+});
+
+
+it("never calls a configured webhook while demo mode is on", async () => {
+  vi.stubEnv("LEAD_WEBHOOK_URL", "https://example.com/not-a-real-webhook");
+  const request = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Unexpected network request"));
+  try {
+    const {saveLead} = await import("./leads");
+    expect(await saveLead(good)).toEqual({stored:false, where:"none"});
+    expect(request).not.toHaveBeenCalled();
+  } finally {
+    request.mockRestore(); vi.unstubAllEnvs();
+  }
 });

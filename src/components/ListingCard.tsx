@@ -1,67 +1,136 @@
+import Image from "next/image";
+import { useState } from "react";
 import type { SearchParams, SearchRow } from "@/lib/search";
 import { money, pct, ratio } from "@/lib/format";
-import { HouseIcon } from "./Mark";
-
-const tone = (d: number) => (d >= 1 ? "good" : d >= 0.85 ? "warn" : "bad");
-const label = (d: number) => (d >= 1 ? "1.0 or better" : d >= 0.85 ? "close to 1.0" : "below 1.0");
-
+import { Icon } from "./Icon";
+export function PropertyPhoto({
+  row,
+  priority = false,
+  sizes = "(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 45vw",
+}: {
+  row: SearchRow;
+  priority?: boolean;
+  sizes?: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  return row.listing.photoUrl && !failed ? (
+    <Image
+      src={row.listing.photoUrl}
+      alt={
+        row.listing.source === "fixture"
+          ? "Illustrative property photograph; not the listed address"
+          : `${row.listing.address}, ${row.listing.city}`
+      }
+      fill
+      sizes={sizes}
+      preload={priority}
+      onError={() => setFailed(true)}
+    />
+  ) : (
+    <div className="photo-fallback">
+      <Icon name="home" />
+      <span>Property photo unavailable</span>
+    </div>
+  );
+}
 export function ListingCard({
   row,
   params,
   onSelect,
+  compared,
+  onCompare,
+  featured,
+  compareDisabled,
 }: {
   row: SearchRow;
   params: SearchParams;
   onSelect: (r: SearchRow) => void;
+  compared: boolean;
+  onCompare: () => void;
+  featured?: boolean;
+  compareDisabled: boolean;
 }) {
-  const { listing: l, rent, dscr, dscrLow, dscrHigh, need } = row;
-  const t = tone(dscr);
+  const { listing: l, dscr, rent, need } = row;
   return (
-    <article className="card">
-      <div className="photo">
-        {l.photoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={l.photoUrl} alt={`${l.address}, ${l.city}`} />
-        ) : (
-          <>
-            <HouseIcon />
-            <span>Photo not available</span>
-          </>
+    <article className={`property-card ${featured ? "featured" : ""}`}>
+      <div className="property-photo">
+        <button
+          className="photo-open"
+          onClick={() => onSelect(row)}
+          aria-label={`View scenario for ${l.address}`}
+        >
+          <PropertyPhoto row={row} priority={featured} />
+        </button>
+        <span className="photo-badge">
+          {l.propertyType === "SFR" ? "Single-family" : l.propertyType}
+        </span>
+        <button
+          className={`compare-toggle ${compared ? "selected" : ""}`}
+          aria-label={`${compared ? "Remove" : "Compare"} ${l.address}`}
+          aria-pressed={compared}
+          disabled={compareDisabled && !compared}
+          onClick={onCompare}
+        >
+          <Icon name={compared ? "check" : "plus"} />
+        </button>
+        {l.source === "fixture" && (
+          <span className="photo-caption">ILLUSTRATIVE PHOTO</span>
+        )}
+        {featured && (
+          <span className="feature-caption">
+            A closer look at your next move.
+          </span>
         )}
       </div>
-      <div className="body">
-        <div className="price">{money(l.price)}</div>
-        <div className="addr">
-          {l.address}, {l.city}, {l.state} {l.zip}
+      <div className="property-body">
+        <div className="property-title">
+          <div>
+            <span className="property-location">
+              {l.city}, {l.state}
+            </span>
+            <h3>
+              <button onClick={() => onSelect(row)}>{l.address}</button>
+            </h3>
+          </div>
+          <span className="property-price">{money(l.price)}</span>
         </div>
-        <div className="ratio-row">
-          <span className={`ratio ${t}`} aria-label={`DSCR ${ratio(dscr)}`}>
-            {ratio(dscr)}
+        <p className="property-facts">
+          {l.beds} beds <span>·</span> {l.baths} baths <span>·</span>{" "}
+          {l.sqft.toLocaleString()} sq ft{" "}
+          <span className="days-listed">· {l.daysOnMarket} days listed</span>
+        </p>
+        <div className="property-metrics">
+          <div className="ratio-metric">
+            <span className="micro">
+              EST. DSCR <Icon name="info" />
+            </span>
+            <strong className={dscr >= 1 ? "positive" : ""}>
+              {ratio(dscr)}
+              <small>×</small>
+            </strong>
+          </div>
+          <div>
+            <span className="micro">EST. RENT / MO</span>
+            <strong>{money(rent.monthlyRent)}</strong>
+          </div>
+          <div>
+            <span className="micro">DOWN PAYMENT</span>
+            <strong>{pct(params.downPct)}</strong>
+          </div>
+        </div>
+        <div className="property-bottom">
+          <span className={`coverage ${dscr >= 1 ? "good" : "neutral"}`}>
+            <span className="status-dot" />
+            {dscr >= 1
+              ? "At or above 1.0"
+              : need.reachable
+                ? `1.0 at ${pct(need.downPct)} down`
+                : "Below 1.0 at 50% down"}
           </span>
-          <span className={`badge ${t}`}>{label(dscr)}</span>
+          <button className="text-button" onClick={() => onSelect(row)}>
+            View scenario <Icon name="arrow" />
+          </button>
         </div>
-        <div className="range">
-          DSCR at {pct(params.downPct)} down. Rent range {money(rent.low ?? rent.monthlyRent)} to{" "}
-          {money(rent.high ?? rent.monthlyRent)} a month gives {ratio(dscrLow)} to {ratio(dscrHigh)}.
-        </div>
-        <div className="facts">
-          <span>Est. rent {money(rent.monthlyRent)}/mo</span>
-          <span>{l.beds} bd</span>
-          <span>{l.baths} ba</span>
-          <span>{l.sqft.toLocaleString()} sqft</span>
-          <span>{l.propertyType}</span>
-          <span>{l.daysOnMarket} days listed</span>
-        </div>
-        <div className="need">
-          {need.reachable
-            ? `Reaches 1.0 with ${pct(need.downPct)} down (${money(need.downPayment)}).`
-            : need.reason === "exceeds-max-down"
-              ? "Needs more than 50% down to reach 1.0."
-              : "Rent does not cover taxes and insurance."}
-        </div>
-        <button className="btn btn-primary" type="button" onClick={() => onSelect(row)}>
-          check my loan options
-        </button>
       </div>
     </article>
   );

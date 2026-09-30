@@ -58,13 +58,14 @@ export interface SaveResult {
 
 /**
  * Lead sink, in order of preference:
- * 1. LEAD_WEBHOOK_URL: POST the lead as JSON (CRM, Zapier, LOS intake).
- * 2. Demo mode: validate only, store nothing.
+ * 1. Demo mode: validate only, store nothing, even when a webhook is configured.
+ * 2. LEAD_WEBHOOK_URL: POST the lead as JSON (CRM, Zapier, LOS intake).
  * 3. Local development: append to .data/leads.jsonl.
  * Serverless hosts have no durable disk, so production without a webhook throws instead of losing leads.
  * The attribution fields (listing, search state, UTM) are the point of capturing here.
  */
 export async function saveLead(lead: LeadInput): Promise<SaveResult> {
+  if (DEMO) return { stored: false, where: "none" };
   const row = { ...lead, receivedAt: new Date().toISOString() };
   const hook = process.env.LEAD_WEBHOOK_URL;
   if (hook) {
@@ -76,7 +77,6 @@ export async function saveLead(lead: LeadInput): Promise<SaveResult> {
     if (!res.ok) throw new Error(`Lead webhook responded ${res.status}`);
     return { stored: true, where: "webhook" };
   }
-  if (DEMO) return { stored: false, where: "none" };
   if (process.env.VERCEL) throw new Error("No durable lead store configured. Set LEAD_WEBHOOK_URL.");
   const dir = path.join(process.cwd(), ".data");
   await mkdir(dir, { recursive: true });
