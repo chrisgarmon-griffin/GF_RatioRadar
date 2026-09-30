@@ -293,7 +293,9 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
               )}
             </select>
           </div>
-          <div className="term-switch" role="group" aria-label="Loan structure">
+          <div className="toolbar-control loan-structure-control">
+            <span id="loan-structure-label" className="toolbar-field-label">Loan structure</span>
+            <div className="term-switch" role="group" aria-labelledby="loan-structure-label">
             <button
               aria-pressed={!p.interestOnly && !p.fortyYear}
               onClick={() =>
@@ -318,6 +320,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
             >
               Interest-only
             </button>
+          </div>
           </div>
           <button
             className={`coverage-switch ${p.mode === "inverse" ? "on" : ""}`}
