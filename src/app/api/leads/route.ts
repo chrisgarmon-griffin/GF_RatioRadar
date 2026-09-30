@@ -5,10 +5,15 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   // Honeypot: bots fill the hidden field. Pretend success.
   if (body && typeof body === "object" && (body as Record<string, unknown>).website) {
-    return NextResponse.json({ ok: true }, { status: 201 });
+    return NextResponse.json({ ok: true, stored: false }, { status: 201 });
   }
   const result = validateLead(body);
   if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
-  await saveLead(result.lead);
-  return NextResponse.json({ ok: true }, { status: 201 });
+  try {
+    const saved = await saveLead(result.lead);
+    return NextResponse.json({ ok: true, stored: saved.stored }, { status: 201 });
+  } catch (e) {
+    console.error("lead save failed", e instanceof Error ? e.message : e);
+    return NextResponse.json({ error: "We could not save your request. Please try again." }, { status: 503 });
+  }
 }

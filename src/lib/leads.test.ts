@@ -20,3 +20,12 @@ describe("validateLead", () => {
     expect(validateLead(null).ok).toBe(false);
   });
 });
+
+describe("saveLead in demo mode", () => {
+  it("validates but stores nothing", async () => {
+    const { saveLead } = await import("./leads");
+    const r = validateLead(good);
+    if (!r.ok) throw new Error("fixture invalid");
+    expect(await saveLead(r.lead)).toEqual({ stored: false, where: "none" });
+  });
+});

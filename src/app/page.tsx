@@ -1,6 +1,7 @@
 import { Mark } from "@/components/Mark";
 import { Search } from "@/components/Search";
 import { FAQ } from "@/lib/faq";
+import { DEMO } from "@/lib/config";
 
 const NMLS = process.env.NEXT_PUBLIC_NMLS;
 
@@ -14,6 +15,11 @@ export default function Home() {
   return (
     <>
       <a className="skip" href="#search">Skip to search</a>
+      {DEMO && (
+        <div className="demo-bar" role="note">
+          Preview build. Listings, rents and rates are sample data, and requests are not sent.
+        </div>
+      )}
       <header className="nav">
         <div className="wrap">
           <a className="brand" href="/" aria-label="Ratio Radar home">

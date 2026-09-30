@@ -25,6 +25,7 @@ export function LeadDialog({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const [stored, setStored] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export function LeadDialog({
       }),
     }).catch(() => null);
     if (res?.ok) {
+      setStored((await res.json().catch(() => null))?.stored !== false);
       setStatus("done");
     } else {
       setStatus("idle");
@@ -78,8 +80,12 @@ export function LeadDialog({
         <div className="dlg">
           {status === "done" ? (
             <>
-              <h2 id="lead-title">Thanks. A loan officer will reach out.</h2>
-              <p className="sub">We have your request for this property. Ratio Radar figures are estimates, and a loan officer will confirm the real numbers with you.</p>
+              <h2 id="lead-title">{stored ? "Thanks. A loan officer will reach out." : "Demo mode: nothing was sent."}</h2>
+              <p className="sub">
+                {stored
+                  ? "We have your request for this property. Ratio Radar figures are estimates, and a loan officer will confirm the real numbers with you."
+                  : "This is a preview with sample listings. Your details were checked but not saved, and no one will contact you."}
+              </p>
               <div className="row">
                 {PREQUAL_URL && (
                   <a className="btn btn-primary" href={PREQUAL_URL} target="_blank" rel="noopener">

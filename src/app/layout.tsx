@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { DEMO } from "@/lib/config";
 
 const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
   title: "Ratio Radar | Find Investment Properties by DSCR",
   description:
     "Search homes for sale by DSCR. See the ratio for every property at 20% down, then see what interest-only, a 40-year term, or a larger down payment does to reach 1.0.",
+  robots: DEMO ? { index: false, follow: false } : undefined,
   openGraph: {
     title: "Ratio Radar | Find Investment Properties by DSCR",
     description: "See the DSCR on every listing and what it takes to reach 1.0.",
