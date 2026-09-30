@@ -4,6 +4,7 @@ import "@fontsource-variable/newsreader";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
+import { SiteShell } from "@/components/SiteShell";
 import { DEMO } from "@/lib/config";
 
 const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -19,6 +20,14 @@ export const metadata: Metadata = {
     description:
       "See the DSCR on every listing and what it takes to reach 1.0.",
     type: "website",
+    images: [
+      {
+        url: "/brand/griffin-wings.png",
+        width: 2078,
+        height: 1310,
+        alt: "Griffin Funding",
+      },
+    ],
   },
 };
 
@@ -31,7 +40,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SiteShell>{children}</SiteShell>
+      </body>
     </html>
   );
 }

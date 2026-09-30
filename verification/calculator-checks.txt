@@ -1,0 +1,11 @@
+Node 22 / Next.js 16.3.7
+Lint: PASS (0 errors, 0 warnings)
+TypeScript: PASS
+Vitest: 39 tests, 6 files PASS
+Original imported engine regression: PASS
+Next production build: PASS (all six public pages generated/served)
+Playwright: 23 tests PASS, 10.3 seconds
+Responsive widths: 320,390,768,1440
+Automated WCAG A/AA checks: zero violations in tested states
+Visual review: desktop calculator, desktop footer, mobile calculator and mobile footer
+Source line review and git diff --check: PASS

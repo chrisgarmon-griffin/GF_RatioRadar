@@ -1,3 +1,7 @@
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { storeHandoff } from "@/lib/calculators/handoff";
+import { emptyScenario } from "@/lib/calculators/model";
 import type { SearchResponse, SearchRow } from "@/lib/search";
 import { computeDscr, DEFAULT_ASSUMPTIONS } from "@/lib/dscr";
 import { money, pct, ratio } from "@/lib/format";
@@ -15,6 +19,8 @@ export function ScenarioDialog({
   onClose: () => void;
   onReview: () => void;
 }) {
+  const router = useRouter();
+  const [handoffError, setHandoffError] = useState(false);
   const { listing: l, rent, need } = row;
   const p = data.params;
   const result = computeDscr({
@@ -142,6 +148,42 @@ export function ScenarioDialog({
           <button className="btn btn-primary full" onClick={onReview}>
             Request a scenario review <Icon name="arrow" />
           </button>
+          <button
+            className="calc-print full"
+            onClick={() => {
+              const scenario = emptyScenario();
+              scenario.payment = p.interestOnly
+                ? "interest_only"
+                : "amortizing";
+              scenario.values = {
+                ...scenario.values,
+                propertyValue: String(l.price),
+                grossRent: String(rent.monthlyRent),
+                downPct: String(p.downPct * 100),
+                ratePct: String(data.rate.rate * 100),
+                termYears: p.fortyYear ? "40" : "30",
+                taxes: ((l.price * DEFAULT_ASSUMPTIONS.taxRate) / 12).toFixed(
+                  2,
+                ),
+                insurance: (
+                  (l.price * DEFAULT_ASSUMPTIONS.insuranceRate) /
+                  12
+                ).toFixed(2),
+              };
+              if (storeHandoff(scenario, "dscr", "property")) {
+                onClose();
+                router.push("/calculators/dscr/");
+              } else setHandoffError(true);
+            }}
+          >
+            Refine in DSCR calculator →
+          </button>
+          {handoffError && (
+            <p role="alert">
+              Could not carry this scenario. Open Calculators and enter the
+              values manually.
+            </p>
+          )}
           <p className="hint">
             A human loan officer reviews actual rent, terms and program
             requirements.

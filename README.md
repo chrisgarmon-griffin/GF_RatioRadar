@@ -1,6 +1,6 @@
 # Ratio Radar
 
-DSCR-first property search for Griffin Funding: search inventory, see an instant DSCR, route into a Griffin pre-qual.
+DSCR-first property exploration and investment calculators for Griffin Funding. Current property inventory is illustrative. Calculator estimates support a human financing review.
 Scope and locked decisions: [docs/SCOPING.md](docs/SCOPING.md). Source audit: [docs/DATA_SOURCE_AUDIT.md](docs/DATA_SOURCE_AUDIT.md).
 
 ## Run
@@ -52,3 +52,11 @@ npm run test:e2e
 ```
 
 Evidence: [verification/README.md](verification/README.md). Live providers and LOS Connector funded-loan attribution remain outside this UI release.
+
+## Separate calculator pages
+
+Next.js remains the application framework. Routes: `/`, `/calculators`, `/calculators/dscr`, `/calculators/cash-flow`, `/how-it-works`, `/dscr-guide`.
+
+The supplied Griffin wings logo and the requested black/red wordmark appear in the shared header and skyline footer. DSCR supports purchase/refinance, long-term/short-term rent, amortizing/interest-only payments and inverse loan buying power. Cash flow covers operating costs, NOI, cap rate and cash-on-cash return. Explicit browser-local handoffs connect properties to financing and financing to operations.
+
+Source provenance, assumptions, privacy and verified footer references: [calculator integration](docs/CALCULATOR-INTEGRATION.md). The original imported regression suite runs with `node src/lib/calculators/vendor/source-regression.mjs`.

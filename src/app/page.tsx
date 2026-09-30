@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { Search } from "@/components/Search";
 import { Icon } from "@/components/Icon";
 import { FAQ } from "@/lib/faq";
 import { parseSearch } from "@/lib/search-url";
 import { DEMO } from "@/lib/config";
-const NMLS = process.env.NEXT_PUBLIC_NMLS;
 export default async function Home({
   searchParams,
 }: {
@@ -17,32 +15,6 @@ export default async function Home({
   });
   return (
     <>
-      <a className="skip" href="#search">
-        Skip to property search
-      </a>
-      <header className="nav">
-        <div className="wrap nav-inner">
-          <Link className="brand" href="/" aria-label="Ratio Radar home">
-            <span className="brand-mark">
-              r<span>.</span>
-            </span>
-            <span className="brand-name">
-              ratio<span>radar</span>
-              <small>BY GRIFFIN FUNDING</small>
-            </span>
-          </Link>
-          <nav aria-label="Primary">
-            <a className="active" href="#search">
-              Explore properties
-            </a>
-            <a href="#how">How it works</a>
-            <a href="#faq">The DSCR guide</a>
-          </nav>
-          <a className="nav-action" href="#search">
-            Find your next property <Icon name="diagonal" />
-          </a>
-        </div>
-      </header>
       {DEMO && (
         <div className="demo-bar" role="note">
           <span className="status-dot" /> INTERACTIVE PREVIEW{" "}
@@ -151,44 +123,6 @@ export default async function Home({
           </div>
         </section>
       </main>
-      <footer className="footer wrap">
-        <div className="footer-top">
-          <Link className="brand" href="/">
-            ratio<span className="red">radar</span>
-            <span className="footer-by">BY GRIFFIN FUNDING</span>
-          </Link>
-          <span>Property perspective. Financing clarity.</span>
-          <a href="#search">
-            Back to explore <Icon name="diagonal" />
-          </a>
-        </div>
-        <p>
-          Ratio Radar is provided by Griffin Funding.
-          {NMLS ? ` NMLS #${NMLS}.` : ""} Equal Housing Opportunity.
-        </p>
-        <p>
-          Decision support only. Estimates are not a loan offer, rate quote, or
-          credit decision. This model divides monthly rent by principal,
-          interest, assumed property taxes and insurance. HOA dues, vacancy,
-          maintenance and other operating costs are not included. A ratio of 1.0
-          is an illustrative benchmark, not a qualification threshold. A human
-          underwriter must review the full loan scenario.
-        </p>
-        <p>
-          {DEMO
-            ? "Preview data and photos are illustrative and do not represent properties available for purchase. "
-            : ""}
-          Photography: Unsplash.{" "}
-          <a
-            href="/image-credits.txt"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Image sources
-          </a>
-          .
-        </p>
-      </footer>
     </>
   );
 }
