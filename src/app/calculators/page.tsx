@@ -19,10 +19,15 @@ export default function Page() {
       <section className="workbench-tools" aria-label="Choose a calculator">
         <Link href="/calculators/dscr/" className="workbench-card">
           <div className="workbench-graphic graphic-finance" aria-hidden="true">
-            <span>RENT</span>
-            <div className="graphic-fraction" />
-            <span>HOUSING PAYMENT</span>
-            <b>= DSCR</b>
+            <div className="finance-equation">
+              <div className="finance-fraction">
+                <span>Monthly rent</span>
+                <span className="graphic-fraction" />
+                <span>Housing payment</span>
+              </div>
+              <span className="finance-equals">=</span>
+              <strong>DSCR</strong>
+            </div>
           </div>
           <div className="workbench-card-copy">
             <span className="resource-label">01 / FINANCING</span>
@@ -78,6 +83,7 @@ export default function Page() {
         </Link>
       </section>
       <section className="workbench-bridge">
+        <div className="workbench-bridge-copy">
         <span className="resource-label">ONE CONNECTED WORKFLOW</span>
         <h2>
           Keep the context.
@@ -88,6 +94,7 @@ export default function Page() {
           Send your modeled financing payment directly to cash flow. Add the
           operating costs you know, then print the scenario for a human review.
         </p>
+        </div>
         <div className="resource-feature-rows">
           <Link href="/calculators/dscr/">
             <span>01 /</span> Model financing <span aria-hidden="true">↗</span>
@@ -100,7 +107,7 @@ export default function Page() {
             <span aria-hidden="true">↗</span>
           </Link>
         </div>
-        <p className="resource-fine">
+        <p className="resource-fine bridge-disclosure">
           Estimates only. Not a loan offer or credit decision. Your calculator
           inputs stay in your browser.
         </p>

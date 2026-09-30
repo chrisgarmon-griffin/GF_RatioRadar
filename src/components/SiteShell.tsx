@@ -4,7 +4,6 @@ import { MotionLayer } from "./MotionLayer";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 function Brand() {
   return (
 <Link
@@ -37,15 +36,6 @@ const links = [
 ];
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const path = usePathname().replace(/\/$/, "") || "/";
-  const [time, setTime] = useState<Date | null>(null);
-  useEffect(() => {
-    const first = setTimeout(() => setTime(new Date()), 0);
-    const id = setInterval(() => setTime(new Date()), 60000);
-    return () => {
-      clearTimeout(first);
-      clearInterval(id);
-    };
-  }, []);
   return (
     <>
       <MotionLayer />
@@ -80,52 +70,34 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <div id="content">{children}</div>
-      <Specialists />
+      {(path === "/" || path === "/calculators") && <Specialists />}
       <footer className="griffin-footer">
         <div className="wrap footer-grid">
-          <div>
+          <div className="footer-brand-column">
             <Brand />
-            <p>
-              Property perspective. Financing clarity.
-              <br />
-              Explore the numbers behind your next investment.
-            </p>
-            <div className="office-clocks">
-              {[
-                ["San Diego", "America/Los_Angeles", "HEADQUARTERS"],
-                ["Scottsdale", "America/Phoenix", "ARIZONA"],
-                ["Irvine", "America/Los_Angeles", "ORANGE COUNTY"],
-                ["Incline Village", "America/Los_Angeles", "NEVADA"],
-              ].map(([city, tz, label]) => (
-                <div key={city}>
-                  <time>
-                    {time
-                      ? new Intl.DateTimeFormat("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                          timeZone: tz,
-                        }).format(time)
-                      : "—"}
-                  </time>
-                  <span>{city}</span>
-                  <small>{label}</small>
-                </div>
-              ))}
+            <p className="footer-tagline">Property perspective. Financing clarity.</p>
+            <div className="footer-disclosures">
+              <p>Decision support only. Estimates are not a loan offer, rate quote,
+                or credit decision. A human underwriter must review the full scenario.</p>
+              <p>Property explorer listings, rents and photography are illustrative.
+                {" "}<a href="/image-credits.txt">Image sources</a>.</p>
+              <p>© {new Date().getFullYear()} Griffin Funding · NMLS #1120111 · Equal Housing Opportunity.</p>
             </div>
           </div>
-          <div>
+          <div className="footer-link-column">
             <h3>EXPLORE</h3>
             {links.map(([href, label]) => (
-              <Link key={href} href={href}>
-                {label}
-              </Link>
+              <Link key={href} href={href}>{label}</Link>
             ))}
-            <a href="https://griffinfunding.com/contact-us/">
-              Contact Griffin ↗
-            </a>
           </div>
-          <div>
+          <div className="footer-link-column footer-contact-column">
+            <h3>CONTACT</h3>
+            <a href="tel:8553948288">(855) 394-8288</a>
+            <a href="https://griffinfunding.com/contact-us/">Contact Griffin ↗</a>
+            <a href="https://griffinfunding.com/">GriffinFunding.com ↗</a>
+            <address>2445 5th Avenue, Suite 401<br />San Diego, CA 92101</address>
+          </div>
+          <div className="footer-link-column footer-legal-column">
             <h3>LEGAL</h3>
             {[
               ["privacy-policy", "Privacy"],
@@ -133,28 +105,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               ["cookie-policy", "Cookies"],
               ["state-licensing", "Licensing"],
             ].map(([slug, label]) => (
-              <a key={slug} href={"https://griffinfunding.com/" + slug + "/"}>
-                {label}
-              </a>
+              <a key={slug} href={"https://griffinfunding.com/" + slug + "/"}>{label}</a>
             ))}
           </div>
-        </div>
-        <div className="wrap footer-fine">
-          <p>
-            © {new Date().getFullYear()} GRIFFIN FUNDING · NMLS #1120111 ·{" "}
-            <a href="https://griffinfunding.com/">GRIFFINFUNDING.COM</a> ·{" "}
-            <a href="tel:8553948288">(855) 394-8288</a>
-          </p>
-          <p>
-            2445 5th Avenue, Suite 401, San Diego, CA 92101. Equal Housing
-            Opportunity.
-          </p>
-          <p>
-            Decision support only. Estimates are not a loan offer, rate quote,
-            or credit decision. A human underwriter must review the full
-            scenario. Property explorer listings, rents and photography are
-            illustrative. <a href="/image-credits.txt">Image sources</a>.
-          </p>
         </div>
         <div className="footer-skyline" aria-hidden="true">
           <Image
