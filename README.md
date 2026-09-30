@@ -30,3 +30,9 @@ npm run typecheck
 ## Product identity
 
 Ratio Radar is the next version of Revestor (revestor.com), acquired by Griffin in December 2025. Scope: [docs/SCOPING.md](docs/SCOPING.md).
+
+## Deployment
+
+Vercel project `ratio-radar` (Griffin Funding team), linked to this repo. The current deployment builds the `claude/focused-albattani-tjpabu` branch and is served at https://ratio-radar.vercel.app behind Vercel Authentication (team members only). The `main` branch is still the empty initial commit, so nothing deploys from it yet.
+
+Demo mode is on by default (`NEXT_PUBLIC_DEMO_MODE`): the site is `noindex`, shows a sample-data banner, and validates lead forms without storing them. Before a public launch: set `NEXT_PUBLIC_DEMO_MODE=false`, `LEAD_WEBHOOK_URL`, `NEXT_PUBLIC_NMLS` and `NEXT_PUBLIC_SITE_URL`, wire real listings, and merge to `main`.
