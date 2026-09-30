@@ -4699,3 +4699,59 @@ input[type="checkbox"] {
   .footer-legal-column { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-24); }
   .footer-legal-column h3 { grid-column: 1 / -1; }
 }
+
+/* Financing controls read left to right, with a quieter estimate row. */
+.financing-controls {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--card-radius);
+  margin-top: var(--space-16);
+  padding: var(--space-24) var(--space-24);
+}
+.scenario-toolbar {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(130px, .8fr) minmax(240px, 1.5fr) minmax(160px, 1fr) auto;
+  gap: var(--space-24);
+  margin-top: 0;
+}
+.scenario-label { border-right: 0; padding-right: 0; }
+.scenario-label > span { font-size: 11px; color: var(--ink); }
+.scenario-label small { font-size: 12px; color: #55514d; }
+.toolbar-control { flex-direction: column; align-items: stretch; gap: var(--space-8); }
+.toolbar-control label { font-size: 12px; color: #45413e; }
+.toolbar-control select { width: 100%; min-height: var(--control-height); color: var(--ink); }
+.term-switch { display: flex; width: 100%; }
+.term-switch button { flex: 1; font-size: 12px; white-space: nowrap; }
+.coverage-switch { margin-left: 0; font-size: 12px; justify-content: center; color: var(--ink); }
+.filter-button { font-size: 12px; padding-left: var(--space-24); color: var(--ink); }
+.scenario-footnote {
+  align-items: center;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #55514d;
+  margin-top: var(--space-16);
+  padding-top: var(--space-16);
+  padding-bottom: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+.scenario-footnote > span:first-child { align-items: baseline; }
+@media (min-width: 701px) and (max-width: 1100px) {
+  .scenario-toolbar { grid-template-columns: 1fr 1fr auto; }
+  .scenario-label { grid-column: 1 / -1; }
+  .term-switch { grid-column: 2 / -1; }
+  .coverage-switch { justify-content: flex-start; grid-column: 1 / 3; }
+  .scenario-footnote { flex-wrap: wrap; }
+}
+@media (max-width: 700px) {
+  .financing-controls { padding: var(--space-16); }
+  .scenario-toolbar { grid-template-columns: 1fr auto; gap: var(--space-16); }
+  .scenario-label { display: flex; grid-column: 1 / -1; }
+  .scenario-label small { display: block; }
+  .toolbar-control { grid-column: 1 / -1; }
+  .term-switch { grid-column: 1 / -1; }
+  .coverage-switch { justify-content: flex-start; }
+  .filter-button { padding-left: var(--space-12); }
+  .scenario-footnote { flex-direction: column; align-items: flex-start; gap: var(--space-8); }
+  .scenario-footnote > span:first-child { display: flex; }
+}
