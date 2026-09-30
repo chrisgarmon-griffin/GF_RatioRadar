@@ -1,3 +1,5 @@
+> **Correction, 2026-09-30:** The product to replicate is **Revestor** (revestor.com), Bill Lyons' former company whose assets Griffin acquired in December 2025, not Revavest.com (an unrelated Nigerian platform). Section 1 below describes the wrong company and is kept for history only. See [DATA_SOURCE_AUDIT.md](DATA_SOURCE_AUDIT.md) section 0.
+
 # Revestor Rebuild — Scoping Doc (Free/Public Data Research + Beat Revavest)
 
 Context: assigned to Chris at the 2026-09-29 meeting with Bill. Two goals in one project: (1) find free/public real estate data sources to avoid or shrink the ~$50K/year Constellation spend, and (2) come out the other side with a Revestor that's genuinely better than [revavest.com](https://revavest.com/), not just a DSCR calculator. See [[project_mbs-highway-webinar-revestor]] for the decisions already locked with Bill.

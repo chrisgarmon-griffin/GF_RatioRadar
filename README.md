@@ -25,3 +25,7 @@ npm run typecheck
 - 20% minimum down, 50% cap before a deal reads "unreachable".
 - 40-year and interest-only are mutually exclusive in the UI (IO is priced on interest alone).
 - Fixture rate adjusters (+0.25% IO, +0.125% 40-year, -0.125% at 25%+ down) are invented until BankingBridge is wired.
+
+## Product identity
+
+The reference product is Revestor (revestor.com), acquired by Griffin in December 2025, not Revavest.com. See the correction in [docs/DATA_SOURCE_AUDIT.md](docs/DATA_SOURCE_AUDIT.md).
