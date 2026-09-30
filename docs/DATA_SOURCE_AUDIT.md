@@ -5,13 +5,10 @@ Audit date: 2026-09-30. Method: web search snippets only. The egress proxy block
 
 ---
 
-## 0. Read first: three corrections to the inputs
+## 0. Read first: two findings that change the plan
 
-1. **The target is Revestor, not Revavest.** Revestor.com is Bill Lyons' former company (Shark Tank, cap rate/NOI/cash flow search). Griffin acquired its assets in December 2025. Revestor.com now forwards to Griffin's DSCR page. Revavest.com is an unrelated Nigerian land co-investment platform. "Revavest" in the scoping doc and the attached site-replication spec is almost certainly a transcription slip for "Revester" in the meeting. Confidence: High on the identity (two independent search results), Moderate on the slip explanation.
-   - Sources: [Griffin press release](https://griffinfunding.com/in-the-news/griffin-funding-acquires-revestor-investor-property-search/), [Revestor CEO on Shark Tank](https://www.housingwire.com/articles/success-revestor-coming-soon/).
-   - Effect: the Revavest replication spec (Nigerian co-investment, academy, bookstore, naira) does not apply. Nothing from it is reused. The spec's crawl also read `/api/*` endpoints that Revavest's robots.txt disallows, so do not republish it.
-2. **Griffin's press release says the Revestor search already runs on "MLS data feeds."** The release describes search of homes for sale in real time, estimated rent ranges, and instant DSCR metrics. First action: find out what feed powers it today, under which license, and in which MLSs. That answer may remove the Constellation question entirely. Confidence: Moderate (release text via search snippet; live product not inspected).
-3. **Constellation does document a photo resource.** Its RESO Web API exposes a `Media` entity (photos, virtual tours) alongside `Property`. Bill was told there are no pictures. Either the quoted package excludes media, or the MLSs in scope do not license photos to this use. Ask Constellation which. Confidence: Moderate. Source: [Constellation Listings API docs](https://docs.cdatalabs.com/listings/).
+1. **Griffin's press release says the Revestor search already runs on "MLS data feeds."** The release describes search of homes for sale in real time, estimated rent ranges, and instant DSCR metrics. First action: find out what feed powers it today, under which license, and in which MLSs. That answer may remove the Constellation question entirely. Confidence: Moderate (release text via search snippet; live product not inspected).
+2. **Constellation does document a photo resource.** Its RESO Web API exposes a `Media` entity (photos, virtual tours) alongside `Property`. Bill was told there are no pictures. Either the quoted package excludes media, or the MLSs in scope do not license photos to this use. Ask Constellation which. Confidence: Moderate. Source: [Constellation Listings API docs](https://docs.cdatalabs.com/listings/).
 
 ---
 
@@ -54,15 +51,15 @@ Listing access is decided MLS by MLS, and eligibility depends on who you are.
 | **FHFA HPI** | Market context | State, MSA | Free | n/a | Quarterly | CSV | Public | High. Source: [FHFA HPI datasets](https://www.fhfa.gov/data/hpi/datasets) |
 | **Redfin Data Center** | Market context only | Regions | Free | n/a | Weekly/monthly | CSV | Aggregates only, attribution required, no listings | High |
 | **Google Street View Static API** | Photo fallback | Wide | Free to 10K requests, then ~$7 per 1,000 | Street exterior, not listing photos | Live | Image URL | Caching and storing images prohibited except panorama IDs. Max 640x640. Needs public terms and privacy policy | Moderate. Source: [Street View policies](https://developers.google.com/maps/documentation/streetview/policies). Verify current pricing |
-| **Regrid** | Parcel, assessed value, land use | ~158M parcels (DeepSignl brief) | Custom, low for pilot per brief | No | Often quarterly | API, GeoJSON | Not reviewed | Low (brief only) |
-| **ATTOM** | Tax assessments, rental AVM, hazards | ~155M properties | Quote-based; reported $850 to $2,000+/mo | No | Daily/weekly | REST | Internal apps and end-user experiences allowed, resale restricted (per brief) | Low-Moderate. Sources: [ATTOM API overview](https://blog.iq.dwellsy.com/attom-data-overview-2026-property-ownership-and-market-data-explained/) |
+| **Regrid** | Parcel, assessed value, land use | ~158M parcels (vendor-reported) | Custom, vendor-reported as low for a pilot | No | Often quarterly | API, GeoJSON | Not reviewed | Low (vendor-reported, unverified) |
+| **ATTOM** | Tax assessments, rental AVM, hazards | ~155M properties | Quote-based; reported $850 to $2,000+/mo | No | Daily/weekly | REST | Internal apps and end-user experiences allowed, resale restricted (vendor-reported) | Low-Moderate. Sources: [ATTOM API overview](https://blog.iq.dwellsy.com/attom-data-overview-2026-property-ownership-and-market-data-explained/) |
 | **Zillow / Redfin / Realtor.com scraping** | Listings | n/a | n/a | n/a | n/a | n/a | Prohibited by terms. Do not use | High |
 
 ---
 
 ## 3. Cost paths
 
-Scoping doc paths, filled with what is known.
+The three paths from the scoping doc, filled with what is known.
 
 | Path | Data cost | Coverage | Active "for sale" | Photos | Refresh | License risk |
 |---|---|---|---|---|---|---|
@@ -89,28 +86,7 @@ Scoping doc paths, filled with what is known.
 
 ---
 
-## 5. What the DeepSignl brief contributes
-
-The brief targets seller prediction for agents. Most of it does not map. What does:
-
-| DeepSignl item | Applies to Ratio Radar | How |
-|---|---|---|
-| County assessor, recorder, tax, GIS as the "spine" | Yes | Same ground truth for tax and ownership layer |
-| Regrid, ATTOM, HouseCanary source notes and price ranges | Yes | Vendor-reported figures, carried into the table above and marked unverified |
-| "Public record does not mean scrape freely. Prefer open-data portals, official APIs, paid bulk files" | Yes | Matches the legal stance above |
-| MLS feed is licensed, no redistribution or casual joining into a resold product | Yes | Reinforces the IDX gate |
-| Data quality score (completeness, freshness, confidence, consistency) | Yes, later | Reuse as a per-listing confidence flag (rent source agreement, data age). Not MVP |
-| Six-layer pipeline, batch first, raw lake + normalized schema | Partly | Keep the provider interfaces. Cache raw responses with source and date. Skip the feature store |
-| Pilot small before a national contract | Yes | Same logic as the CA-first pilot |
-| CCPA/CPRA, TCPA, CAN-SPAM, FCRA notes | Yes for lead capture | Pre-qual form and follow-up need consent and unsubscribe. Not a credit product, so no adverse-action logic |
-| Likely Seller Score, personas, LLC-to-person resolution, ZIP exclusivity, outreach sequences, pricing tiers, mail/gift automation | No | Different product |
-| Estated now inside ATTOM, so no standalone cheap tier | Yes | Do not plan on a cheap Estated contract |
-
-One idea worth banking: the Investor persona and multi-property owners are DeepSignl's signal, but for Griffin they are also DSCR borrower leads. That belongs to a later attribution project, not this MVP.
-
----
-
-## 6. Open questions
+## 5. Open questions
 
 1. What feed and license power the live Revestor search? (Bill, Revestor tech transfer)
 2. Does the existing Revestor feed cover public display for CA, TX and FL? (Legal)
@@ -121,7 +97,7 @@ One idea worth banking: the Investor persona and multi-property owners are DeepS
 7. Does Griffin's underwriting rule for taxes and insurance use purchase price or actual tax bills? Sets the DSCR method.
 8. Read the full Constellation and RentCast terms. This audit read snippets only.
 
-## 7. Next actions
+## 6. Next actions
 
 1. Send questions 1 to 3 to Bill and Constellation this week.
 2. Build the HouseCanary and BankingBridge adapters behind the existing interfaces (both contracted).
