@@ -1,0 +1,36 @@
+:root {
+  --red: #b3202a;
+  --ink: #1f1f1f;
+  --muted: #6b6b6b;
+  --line: #e4e0d8;
+  --paper: #faf8f4;
+  --good: #1f7a3d;
+  --warn: #a15c00;
+  --bad: #b3202a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; color: var(--ink); background: var(--paper); }
+main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { margin: 0 0 4px; font-size: 28px; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-bottom: 20px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+select, input[type="number"] { width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 15px; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--ink); font-size: 15px; }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { flex: 1; padding: 8px; border: 0; background: #fff; cursor: pointer; font-size: 14px; }
+.seg button.on { background: var(--ink); color: #fff; }
+.meta { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.photo { height: 140px; background: repeating-linear-gradient(45deg, #efece4, #efece4 10px, #f6f3ec 10px, #f6f3ec 20px); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; }
+.body { padding: 12px 14px 14px; }
+.price { font-size: 20px; font-weight: 600; }
+.addr { color: var(--muted); font-size: 14px; margin: 2px 0 10px; }
+.ratio { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.ratio b { font-size: 30px; }
+.ratio.good b { color: var(--good); } .ratio.warn b { color: var(--warn); } .ratio.bad b { color: var(--bad); }
+.facts { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.need { font-size: 14px; margin-top: 8px; }
+.cta { display: inline-block; margin-top: 12px; background: var(--red); color: #fff; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 14px; }
+.notice { font-size: 12px; color: var(--muted); margin-top: 28px; line-height: 1.5; }
