@@ -36,7 +36,7 @@ export function PageHero({
         <h1>
           {title}
           <br />
-          <em>{accent}</em>
+          <em className={accent.toLowerCase().includes("see the bigger picture") ? "hero-accent-red" : undefined}>{accent}</em>
         </h1>
         <p>{description}</p>
         {actions && (

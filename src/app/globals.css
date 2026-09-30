@@ -4363,3 +4363,56 @@ input[type="checkbox"] {
     background: white;
   }
 }
+
+/* Compact resource mastheads and sourced specialist handoff. */
+.resource-hero, .resource-hero-compact { min-height: 230px; padding: 26px 38px; }
+.resource-hero-copy { max-width: 100%; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(240px, 1fr); column-gap: 36px; align-items: center; }
+.resource-eyebrow { grid-column: 1; justify-self: start; padding: 5px 11px; }
+.resource-hero h1, .resource-hero-compact h1 { grid-column: 1; grid-row: 2 / 4; font-size: clamp(28px, 3.2vw, 42px); margin: 12px 0 0; }
+.resource-hero p, .resource-hero-compact p { grid-column: 2; grid-row: 2; font-size: 12px; line-height: 1.7; max-width: 410px; }
+.resource-actions { grid-column: 2; margin-top: 15px; gap: 9px; }
+.resource-actions .resource-pill { min-height: 40px; padding: 10px 15px; gap: 14px; font-size: 11px; }
+.resource-hero-compact { min-height: 165px; padding: 24px 38px; }
+.resource-hero-compact h1 { font-size: clamp(26px, 3vw, 36px); }
+.resource-hero h1 .hero-accent-red { color: #ff7777; }
+.specialists { margin-top: 54px; margin-bottom: 48px; }
+.specialists-heading { display:flex; justify-content:space-between; align-items:center; gap:24px; margin-bottom:24px; }
+.specialists h2 { font-size:clamp(24px,3vw,36px); letter-spacing:-.04em; margin:10px 0; }
+.specialists-heading p,.specialist-disclosure { color:#596164; font-size:12px; line-height:1.7; }
+.reviews-link { color:#a70c0c; font-size:13px; font-weight:600; flex-shrink:0; }
+.reviews-link small { display:block; color:#596164; font-size:10px; font-weight:400; margin-top:7px; }
+.specialist-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.specialist-card { padding:22px; border:1px solid #dce0dd; border-radius:20px; background:#fff; min-width:0; }
+.specialist-identity { display:flex; align-items:center; gap:13px; }
+.specialist-identity img,.specialist-initials { width:54px; height:54px; flex-shrink:0; border-radius:50%; object-fit:cover; object-position:50% 20%; }
+.specialist-initials { display:grid; place-items:center; background:#f2e9ce; color:#665018; }
+.specialist-identity h3 { font-size:15px; margin:0 0 5px; }
+.specialist-identity p { font-size:11px; margin:0 0 4px; }
+.specialist-identity small { font-size:9px; color:#596164; }
+.specialist-tag { display:inline-block; background:#f6edce; color:#655018; border-radius:20px; padding:5px 9px; font-size:10px; margin-top:18px; }
+.specialist-bio { font-size:12px; line-height:1.7; color:#596164; min-height:62px; }
+.specialist-links { display:flex; gap:16px; flex-wrap:wrap; font-size:12px; margin:18px 0; }
+.specialist-links a { text-decoration:underline; text-underline-offset:4px; }
+.specialist-apply { display:block; padding:12px 15px; border-radius:30px; background:#ba0b0b; color:#fff; text-align:center; font-size:12px; }
+.specialist-more { margin-top:20px; }
+.specialist-more summary { cursor:pointer; font-size:13px; padding:12px 0; }
+.specialist-disclosure { max-width:920px; margin-top:20px; }
+.specialists-compact { margin:24px; }
+.specialists-compact .specialists-heading { display:block; }
+.specialists-compact h2 { font-size:24px; }
+.specialists-compact .reviews-link { display:block; margin-top:15px; }
+.specialist-select { display:block; font-size:12px; margin:20px 0; }
+.specialist-select select { display:block; width:100%; padding:12px; margin-top:8px; border:1px solid #bcc4c1; border-radius:8px; background:white; color:#222; }
+@media(max-width:900px) { .specialist-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .resource-hero-copy { column-gap:20px; } }
+@media(max-width:700px) {
+ .resource-hero,.resource-hero-compact { min-height:0; padding:22px 24px; }
+ .resource-hero-copy { display:block; }
+ .resource-hero h1,.resource-hero-compact h1 { font-size:28px; margin:10px 0; }
+ .resource-hero p { font-size:11px; line-height:1.6; }
+ .resource-actions { margin-top:12px; }
+ .resource-actions .resource-pill { min-height:36px; padding:9px 12px; }
+ .specialists-heading { display:block; } .reviews-link { display:block; margin-top:20px; }
+ .specialist-grid { grid-template-columns:1fr; } .specialists { margin-top:30px; }
+}
+@media print { .specialists { display:none; } }
+@media(min-width:701px) { .resource-actions { grid-row:3; } }

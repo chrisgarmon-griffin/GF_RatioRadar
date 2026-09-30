@@ -1,0 +1,210 @@
+[
+  {
+    "name": "Cody Unger",
+    "role": "Branch Manager",
+    "office": "Scottsdale, AZ",
+    "nmls": "1295308",
+    "tags": [
+      "DSCR Loans",
+      "Bank Statement Loans",
+      "Mortgage Leadership"
+    ],
+    "image": "/specialists/cody-unger-5118c15886.webp",
+    "slug": "cody-unger",
+    "profile": "https://griffinfunding.com/our-team/#bio-cody-unger",
+    "phone": "(480) 674-0229",
+    "email": "cody@griffinfunding.com"
+  },
+  {
+    "name": "Justin Guthrie",
+    "role": "Loan Officer",
+    "office": "San Diego, CA",
+    "nmls": "2328091",
+    "tags": [
+      "DSCR",
+      "Bank Statement",
+      "Asset-Based"
+    ],
+    "image": "/specialists/justin-guthrie-43da009fe0.webp",
+    "slug": "justin-guthrie",
+    "profile": "https://griffinfunding.com/our-team/justin-guthrie/",
+    "phone": "(619) 625-5125",
+    "email": "justin@griffinfunding.com"
+  },
+  {
+    "name": "Jack Iwamoto",
+    "role": "Executive Loan Officer",
+    "office": "Irvine, CA",
+    "nmls": "2634018",
+    "tags": [
+      "DSCR",
+      "Bank Statement",
+      "Investment Property"
+    ],
+    "image": "/specialists/jack-iwamoto-5caeba6ec1.webp",
+    "slug": "jack-iwamoto",
+    "profile": "https://griffinfunding.com/our-team/jack-iwamoto/",
+    "phone": "(619) 625-5281",
+    "email": "jack@griffinfunding.com"
+  },
+  {
+    "name": "Joshua Miller",
+    "role": "Sr. Loan Officer",
+    "office": "Scottsdale, AZ",
+    "nmls": "1640013",
+    "tags": [
+      "DSCR",
+      "Refinance",
+      "Investment Property"
+    ],
+    "image": "/specialists/joshua-miller-d1d1e0a8bf.webp",
+    "slug": "joshua-miller",
+    "profile": "https://griffinfunding.com/our-team/joshua-miller/",
+    "phone": "(480) 405-4997",
+    "email": "joshua@griffinfunding.com"
+  },
+  {
+    "name": "Matt McCarthy",
+    "role": "Loan Officer",
+    "office": "Irvine, CA",
+    "nmls": "2709142",
+    "tags": [
+      "DSCR",
+      "Investor Lending",
+      "Rental Properties"
+    ],
+    "image": "/specialists/matt-mccarthy-83bb8ff4d1.webp",
+    "slug": "matt-mccarthy",
+    "profile": "https://griffinfunding.com/our-team/matt-mccarthy/",
+    "phone": "(949) 867-4583",
+    "email": "mattmccarthy@griffinfunding.com"
+  },
+  {
+    "name": "Gabriel Salazar",
+    "role": "Loan Officer",
+    "office": "San Diego, CA",
+    "nmls": "2616831",
+    "tags": [
+      "DSCR",
+      "Investment Property",
+      "Refinance"
+    ],
+    "image": "/specialists/gabriel-salazar-6c2cda5538.webp",
+    "slug": "gabriel-salazar",
+    "profile": "https://griffinfunding.com/our-team/gabriel-salazar/",
+    "phone": "(619) 413-0176",
+    "email": "gabriel@griffinfunding.com"
+  },
+  {
+    "name": "Andre Shmoldas",
+    "role": "Producing Sales Manager",
+    "office": "San Diego, CA",
+    "nmls": "312335",
+    "tags": [
+      "Refinance",
+      "Home Purchase",
+      "DSCR"
+    ],
+    "image": "/specialists/andre-shmoldas-8988a89f69.webp",
+    "slug": "andre-shmoldas",
+    "profile": "https://griffinfunding.com/our-team/andre-shmoldas/",
+    "phone": "(619) 903-6653",
+    "email": "andre.s@griffinfunding.com"
+  },
+  {
+    "name": "Jeffrey Elizalde",
+    "role": "Loan Officer",
+    "office": "Irvine, CA",
+    "nmls": "375393",
+    "tags": [
+      "Non-QM",
+      "DSCR",
+      "Traditional Lending"
+    ],
+    "image": "/specialists/jeffrey-elizalde-13b690b32b.webp",
+    "slug": "jeffrey-elizalde",
+    "profile": "https://griffinfunding.com/our-team/jeffrey-elizalde/",
+    "phone": "(949) 408-0806",
+    "email": "jeffrey@griffinfunding.com"
+  },
+  {
+    "name": "Valerie Zatarain",
+    "role": "Loan Officer",
+    "office": "San Diego, CA",
+    "nmls": "1507400",
+    "tags": [
+      "Conventional",
+      "Bank Statement",
+      "DSCR"
+    ],
+    "image": "",
+    "slug": "valerie-zatarain",
+    "profile": "https://griffinfunding.com/our-team/valerie-zatarain/",
+    "phone": "(619) 848-5621",
+    "email": "valerie@griffinfunding.com"
+  },
+  {
+    "name": "Michael Sluja",
+    "role": "Loan Officer",
+    "office": "Charlotte, NC",
+    "nmls": "2706905",
+    "tags": [
+      "DSCR",
+      "Responsive communication",
+      "Knowledgeable guidance"
+    ],
+    "image": "/specialists/michael-sluja-077e8eef12.webp",
+    "slug": "michael-sluja",
+    "profile": "https://griffinfunding.com/our-team/michael-sluja/",
+    "phone": "(980) 890-5571",
+    "email": "michael.sluja@griffinfunding.com"
+  },
+  {
+    "name": "Justin Ferrara",
+    "role": "Loan Officer",
+    "office": "Scottsdale, AZ",
+    "nmls": "",
+    "tags": [
+      "DSCR",
+      "Bank Statement",
+      "Non-QM"
+    ],
+    "image": "/specialists/justin-ferrara-4509ce3319.webp",
+    "slug": "justin-ferrara",
+    "profile": "https://griffinfunding.com/our-team/justin-ferrara/",
+    "phone": "(520) 658-2952",
+    "email": "justin.ferrara@griffinfunding.com"
+  },
+  {
+    "name": "Larry Victor Jr",
+    "role": "Loan Officer",
+    "office": "Charlotte, NC",
+    "nmls": "2733581",
+    "tags": [
+      "Non-QM",
+      "DSCR",
+      "Real Estate Investors"
+    ],
+    "image": "",
+    "slug": "larry-victor",
+    "profile": "https://griffinfunding.com/our-team/larry-victor/",
+    "phone": "980 890 7197",
+    "email": "larry.victor@griffinfunding.com"
+  },
+  {
+    "name": "Guy Troxler",
+    "role": "Executive Loan Officer",
+    "office": "Charlotte, NC",
+    "nmls": "1642169",
+    "tags": [
+      "DSCR",
+      "Bank Statement",
+      "Non-QM"
+    ],
+    "image": "/specialists/guy-troxler-8dca8dc567.webp",
+    "slug": "guy-troxler",
+    "profile": "https://griffinfunding.com/our-team/guy-troxler/",
+    "phone": "(980) 321-0580",
+    "email": "guy@griffinfunding.com"
+  }
+]

@@ -1,4 +1,5 @@
 "use client";
+import { Specialists } from "./Specialists";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -92,6 +93,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <div id="content">{children}</div>
+      <Specialists />
       <footer className="griffin-footer">
         <div className="wrap footer-grid">
           <div>

@@ -1,3 +1,4 @@
+import { Specialists } from "./Specialists";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { storeHandoff } from "@/lib/calculators/handoff";
@@ -197,6 +198,7 @@ export function ScenarioDialog({
           </p>
         </div>
       </div>
+      <Specialists compact />
     </Modal>
   );
 }
