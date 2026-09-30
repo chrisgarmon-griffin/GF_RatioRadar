@@ -47,3 +47,21 @@ describe("runSearch", () => {
     expect(cheap.rows.every((r) => r.listing.price <= 300000)).toBe(true);
   });
 });
+
+import { mapPool } from "./search";
+
+describe("mapPool", () => {
+  it("preserves order and never exceeds the concurrency limit", async () => {
+    let inFlight = 0;
+    let peak = 0;
+    const out = await mapPool([1, 2, 3, 4, 5, 6, 7, 8], 3, async (n) => {
+      inFlight++;
+      peak = Math.max(peak, inFlight);
+      await new Promise((r) => setTimeout(r, 5));
+      inFlight--;
+      return n * 2;
+    });
+    expect(out).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
+    expect(peak).toBeLessThanOrEqual(3);
+  });
+});

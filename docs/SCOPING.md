@@ -88,11 +88,15 @@ Three answers unlock the build:
 |---|---|---|
 | Active listings | Existing Revestor feed, or Constellation / IDX | Blocked on section 5 |
 | Photos | Listing media if licensed, else Street View live render as fallback | Blocked on section 5 |
-| Rent | HouseCanary (locked); HUD and Census as cross-check | Adapter to build |
-| Rate | BankingBridge (locked) | Adapter to build |
+| Rent | HouseCanary (locked); HUD and Census as cross-check | Adapter built, untested against a live account |
+| Rate | BankingBridge (locked) | Adapter seam built, contract assumed. Needs BankingBridge docs and a sandbox key |
 | Tax and insurance | Census county tax data replaces the 1.10% placeholder | To build |
 
 Free and public data cannot supply "for sale" status, so it cannot carry the MVP alone. It reduces the paid bill and feeds SEO pages. Full source table, costs and confidence labels are in the audit.
+
+### Fallback if listing rights fail
+
+A Chrome extension that overlays DSCR on Zillow and Redfin pages avoids the listing feed and the photo gap, but gives up SEO and inverse search, and carries terms-of-service and Chrome Web Store policy risk. Analysis in [CHROME_EXTENSION_OPTION.md](CHROME_EXTENSION_OPTION.md).
 
 ## 7. Cost paths
 

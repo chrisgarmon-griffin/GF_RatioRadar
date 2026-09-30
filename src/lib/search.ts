@@ -1,5 +1,5 @@
 import { computeDscr, requiredDownPayment, TARGET_DSCR, type DownPaymentNeed } from "./dscr";
-import { listings, rates, rents, type Listing, type RateQuote, type RentEstimate } from "./providers";
+import { listings, ProviderError, rates, rents, type Listing, type RateQuote, type RentEstimate } from "./providers";
 
 export type SearchMode = "forward" | "inverse";
 
@@ -30,35 +30,64 @@ export interface SearchRow {
 export interface SearchResponse {
   rate: RateQuote;
   rows: SearchRow[];
+  /** Listings dropped because no rent estimate was available. Never shown with a made-up rent. */
+  skipped: number;
   params: SearchParams;
 }
 
-export async function runSearch(p: SearchParams): Promise<SearchResponse> {
-  const [found, rate] = await Promise.all([
-    listings().search({ states: p.states, zip: p.zip, minPrice: p.minPrice, maxPrice: p.maxPrice }),
-    rates().quote({ interestOnly: p.interestOnly, fortyYear: p.fortyYear, downPct: p.downPct }),
-  ]);
+const RENT_CONCURRENCY = 6;
 
-  const rows: SearchRow[] = await Promise.all(
-    found.map(async (listing) => {
-      const rent = await rents().estimate(listing);
-      const base = {
-        price: listing.price,
-        annualRate: rate.rate,
-        interestOnly: p.interestOnly,
-        fortyYear: p.fortyYear,
-      };
-      const at = (monthlyRent: number, downPct: number) => computeDscr({ ...base, monthlyRent, downPct }).dscr;
-      return {
-        listing,
-        rent,
-        dscr: at(rent.monthlyRent, p.downPct),
-        dscrLow: at(rent.low ?? rent.monthlyRent, p.downPct),
-        dscrHigh: at(rent.high ?? rent.monthlyRent, p.downPct),
-        need: requiredDownPayment({ ...base, monthlyRent: rent.monthlyRent }, TARGET_DSCR),
-      };
-    }),
-  );
+/** Run async work over items with a fixed number in flight. Preserves order. */
+export async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
+  const out: R[] = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await fn(items[i]);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
+}
+
+const median = (xs: number[]) => {
+  if (!xs.length) return undefined;
+  const s = [...xs].sort((a, b) => a - b);
+  return s[Math.floor(s.length / 2)];
+};
+
+export async function runSearch(p: SearchParams): Promise<SearchResponse> {
+  const found = await listings().search({ states: p.states, zip: p.zip, minPrice: p.minPrice, maxPrice: p.maxPrice });
+  const medianPrice = median(found.map((l) => l.price));
+  const rate = await rates().quote({
+    interestOnly: p.interestOnly,
+    fortyYear: p.fortyYear,
+    downPct: p.downPct,
+    loanAmount: medianPrice ? Math.round(medianPrice * (1 - p.downPct)) : undefined,
+  });
+
+  const priced = await mapPool(found, RENT_CONCURRENCY, async (listing): Promise<SearchRow | null> => {
+    let rent: RentEstimate;
+    try {
+      rent = await rents().estimate(listing);
+    } catch (e) {
+      // A property the vendor cannot value is dropped. Anything else (auth, outage) fails the search.
+      if (e instanceof ProviderError && /no rent estimate/.test(e.message)) return null;
+      throw e;
+    }
+    const base = { price: listing.price, annualRate: rate.rate, interestOnly: p.interestOnly, fortyYear: p.fortyYear };
+    const at = (monthlyRent: number, downPct: number) => computeDscr({ ...base, monthlyRent, downPct }).dscr;
+    return {
+      listing,
+      rent,
+      dscr: at(rent.monthlyRent, p.downPct),
+      dscrLow: at(rent.low ?? rent.monthlyRent, p.downPct),
+      dscrHigh: at(rent.high ?? rent.monthlyRent, p.downPct),
+      need: requiredDownPayment({ ...base, monthlyRent: rent.monthlyRent }, TARGET_DSCR),
+    };
+  });
+  const rows = priced.filter((r): r is SearchRow => r !== null);
 
   const sorted =
     p.mode === "inverse"
@@ -67,5 +96,5 @@ export async function runSearch(p: SearchParams): Promise<SearchResponse> {
           .sort((a, b) => (a.need.reachable && b.need.reachable ? a.need.downPct - b.need.downPct : 0))
       : rows.sort((a, b) => b.dscr - a.dscr);
 
-  return { rate, rows: sorted, params: p };
+  return { rate, rows: sorted, skipped: priced.length - rows.length, params: p };
 }

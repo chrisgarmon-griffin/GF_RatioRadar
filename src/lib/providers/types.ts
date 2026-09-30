@@ -27,6 +27,8 @@ export interface RentEstimate {
   monthlyRent: number;
   low?: number;
   high?: number;
+  /** Model confidence where the source reports one (HouseCanary forecast standard deviation). Lower is tighter. */
+  fsd?: number;
   source: string;
 }
 
@@ -41,6 +43,20 @@ export interface RateRequest {
   interestOnly: boolean;
   fortyYear: boolean;
   downPct: number;
+  /** Representative loan amount for pricing. Rate sheets adjust by loan size. */
+  loanAmount?: number;
+}
+
+/** Thrown by live providers when a vendor call fails. The message is safe to log, not to show users. */
+export class ProviderError extends Error {
+  constructor(
+    public provider: string,
+    message: string,
+    public status?: number,
+  ) {
+    super(`${provider}: ${message}`);
+    this.name = "ProviderError";
+  }
 }
 
 export interface ListingProvider {

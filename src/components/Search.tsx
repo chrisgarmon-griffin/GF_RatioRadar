@@ -149,8 +149,9 @@ export function Search() {
           <h2 aria-live="polite">{loading ? "Searching" : `${data?.rows.length ?? 0} ${data?.rows.length === 1 ? "property" : "properties"}`}</h2>
           {data && !loading && (
             <p className="meta">
-              Sample rate {(data.rate.rate * 100).toFixed(3)}% ({data.rate.asOf}).{" "}
+              {data.rate.source === "fixture" ? "Sample rate" : "Rate"} {(data.rate.rate * 100).toFixed(3)}% ({data.rate.asOf}).{" "}
               {p.mode === "inverse" ? "Sorted by lowest down payment to reach 1.0." : "Sorted by highest DSCR."}
+              {data.skipped > 0 && ` ${data.skipped} ${data.skipped === 1 ? "listing was" : "listings were"} left out because no rent estimate was available.`}
             </p>
           )}
         </div>

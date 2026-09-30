@@ -27,5 +27,10 @@ export async function POST(req: Request) {
     fortyYear: body.fortyYear === true && body.interestOnly !== true,
     downPct,
   };
-  return NextResponse.json(await runSearch(params));
+  try {
+    return NextResponse.json(await runSearch(params));
+  } catch (e) {
+    console.error("search failed", e instanceof Error ? e.message : e);
+    return NextResponse.json({ error: "Search is temporarily unavailable. Please try again." }, { status: 502 });
+  }
 }
