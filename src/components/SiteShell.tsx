@@ -48,7 +48,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <header className="rr-header">
         <div className="wrap rr-navigation">
           <Link className="header-logo" href="/" aria-label="Griffin Funding RatioRadar home">
-            <Image src="/brand/griffin-ratioradar-lockup.png" width={2145} height={733} alt="Griffin Funding RatioRadar" priority sizes="(max-width: 600px) 180px, 310px" />
+            <Image className="header-griffin" src="/brand/griffin-wings.png" width={2078} height={1310} alt="" priority sizes="50px" />
+            <span className="header-lettering" aria-hidden="true"><Image src="/brand/griffin-ratioradar-lockup.png" width={2145} height={733} alt="" priority sizes="210px" /></span>
           </Link>
           <nav aria-label="Primary">
             {links.map(([href, label]) => (

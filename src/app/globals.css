@@ -3156,5 +3156,8 @@ input[type="checkbox"] {
   }
 }
 
-.header-logo{display:block;flex-shrink:0;width:310px;line-height:0}.header-logo img{width:100%;height:auto}
-@media(max-width:600px){.header-logo{width:180px}}
+.header-logo{display:flex;align-items:center;gap:8px;flex-shrink:0;width:192px;line-height:0}
+.header-logo .header-griffin{width:50px;height:auto;object-fit:contain}
+.header-lettering{display:block;position:relative;width:134px;height:38px;overflow:hidden;flex-shrink:0}
+.header-lettering img{position:absolute;width:210px;max-width:none;height:auto;left:-76px;top:-20px}
+@media(max-width:600px){.header-logo{width:160px;gap:7px}.header-logo .header-griffin{width:42px}.header-lettering{width:111px;height:32px}.header-lettering img{width:174px;left:-63px;top:-16px}}
