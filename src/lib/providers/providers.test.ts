@@ -20,13 +20,18 @@ describe("HouseCanary adapter", () => {
       monthlyRent: 4642, low: 3834, high: 5673, fsd: 0.198, source: "HouseCanary",
     });
   });
+  it("parses the live array shape with address_info", () => {
+    const body = [{ ...hcBody({ price_mean: 2450, price_lwr: 2254, price_upr: 2646 }), address_info: { zipcode: "93706" } }];
+    expect(parseRentalValue(body)).toMatchObject({ monthlyRent: 2450, low: 2254, high: 2646 });
+    expect(() => parseRentalValue([])).toThrow(/unexpected response/);
+  });
   it("rejects a non-zero api_code and odd shapes", () => {
     expect(() => parseRentalValue(hcBody({}, 3))).toThrow(/no rent estimate/);
     expect(() => parseRentalValue({})).toThrow(/unexpected response/);
     expect(() => parseRentalValue(hcBody({ price_mean: 0 }))).toThrow(/price_mean/);
   });
   it("sends basic auth, address and zipcode, and caches by address", async () => {
-    const fetchImpl = vi.fn(async () => ok(hcBody({ price_mean: 2450, price_lwr: 2254, price_upr: 2646 })));
+    const fetchImpl = vi.fn(async () => ok([hcBody({ price_mean: 2450, price_lwr: 2254, price_upr: 2646 })]));
     const p = createHouseCanaryRent({ key: "k", secret: "s", fetchImpl });
     await p.estimate(listing);
     await p.estimate(listing);
@@ -35,6 +40,8 @@ describe("HouseCanary adapter", () => {
     expect(url).toContain("/v2/property/rental_value?");
     expect(url).toContain("address=1204+Alder+St");
     expect(url).toContain("zipcode=93706");
+    expect(url).toContain("city=Fresno");
+    expect(url).toContain("state=CA");
     expect((init.headers as Record<string, string>).authorization).toBe("Basic " + Buffer.from("k:s").toString("base64"));
   });
   it("maps HTTP errors and does not cache failures", async () => {

@@ -4,13 +4,17 @@ import { ProviderError, type Listing, type RentEstimate, type RentProvider } fro
 /**
  * HouseCanary rental AVM adapter.
  *
- * Contract used (HouseCanary v2 API reference, checked 2026-09-30 via search snippets, not against a live account):
- *   GET https://api.housecanary.com/v2/property/rental_value?address=<street>&zipcode=<zip>
+ * Contract used (HouseCanary Analytics API docs, GET /v2/property/rental_value; request side confirmed from the
+ * docs page on 2026-10-01, response fields from search snippets and still to be confirmed against a live call):
+ *   GET https://api.housecanary.com/v2/property/rental_value?address=<number street>&city=&state=&zipcode=
+ *   (the docs say a non-slug request must carry the other identifiers, so we send city, state and zip too)
  *   HTTP Basic auth: API key as user, API secret as password.
- *   200 body: { "property/rental_value": { "api_code": 0, "api_code_description": "ok",
- *               "result": { "price_mean": n, "price_lwr": n, "price_upr": n, "fsd": n } } }
+ *   200 body: an ARRAY, one element per property:
+ *     [ { "property/rental_value": { "api_code": 0, "api_code_description": "ok",
+ *           "result": { "price_mean": n, "price_lwr": n, "price_upr": n, "fsd": n } },
+ *         "address_info": { ... } } ]
  * A non-zero api_code inside a 200 means the property could not be valued.
- * Confirm against the account's current Data Explorer docs and the contracted price per call before launch.
+ * The docs label this endpoint "Pricing Tier: Premium". Confirm the contracted per-call price before launch.
  */
 
 const BASE = "https://api.housecanary.com/v2";
@@ -24,7 +28,9 @@ interface RentalValueBody {
 }
 
 export function parseRentalValue(body: unknown): RentEstimate {
-  const node = (body as RentalValueBody | null)?.["property/rental_value"];
+  // Live responses are an array with one element per property. Accept a bare object too.
+  const first = (Array.isArray(body) ? body[0] : body) as RentalValueBody | null | undefined;
+  const node = first?.["property/rental_value"];
   if (!node) throw new ProviderError("housecanary", "unexpected response shape");
   if (node.api_code !== 0 || !node.result) {
     throw new ProviderError("housecanary", `no rent estimate (${node.api_code_description ?? `code ${node.api_code}`})`);
@@ -57,7 +63,7 @@ export function createHouseCanaryRent(o: HouseCanaryOptions): RentProvider {
     estimate(l: Listing) {
       const key = `${l.address}|${l.zip}`.toLowerCase();
       return cache.get(key, async () => {
-        const qs = new URLSearchParams({ address: l.address, zipcode: l.zip });
+        const qs = new URLSearchParams({ address: l.address, city: l.city, state: l.state, zipcode: l.zip });
         const body = await fetchJson(
           "housecanary",
           `${o.baseUrl ?? BASE}/property/rental_value?${qs}`,
