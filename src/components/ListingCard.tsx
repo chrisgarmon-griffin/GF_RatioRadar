@@ -44,6 +44,16 @@ export function ListingCard({
           DSCR at {pct(params.downPct)} down. Rent range {money(rent.low ?? rent.monthlyRent)} to{" "}
           {money(rent.high ?? rent.monthlyRent)} a month gives {ratio(dscrLow)} to {ratio(dscrHigh)}.
         </div>
+        {rent.fsd !== undefined && (
+          // HouseCanary's own reports show confidence as 1 minus the forecast standard deviation
+          // (FSD 0.23 reads as 77%, FSD 0.17 as 83%). Inferred from sample reports, not from their docs.
+          <div className="range">Rent estimate confidence {Math.round((1 - rent.fsd) * 100)}%.</div>
+        )}
+        {l.propertyType === "2-4 Unit" && (
+          <div className="range">
+            Multi-unit property: this rent estimate may cover only one unit. A loan officer will confirm total rent.
+          </div>
+        )}
         <div className="facts">
           <span>Est. rent {money(rent.monthlyRent)}/mo</span>
           <span>{l.beds} bd</span>
