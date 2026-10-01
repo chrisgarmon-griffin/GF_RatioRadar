@@ -247,16 +247,7 @@ export const fixtureRent: RentProvider = {
 };
 
 export const fixtureRate: RateProvider = {
-  async quote(r) {
-    // Placeholder pricing adjusters; BankingBridge replaces this wholesale.
-    let rate = 0.0725;
-    if (r.interestOnly) rate += 0.0025;
-    if (r.fortyYear) rate += 0.00125;
-    if (r.downPct >= 0.25) rate -= 0.00125;
-    return {
-      rate,
-      asOf: new Date().toISOString().slice(0, 10),
-      source: "fixture",
-    };
+  async quote() {
+    return { rate: 0.0799, asOf: "Example assumption", source: "fixture" };
   },
 };

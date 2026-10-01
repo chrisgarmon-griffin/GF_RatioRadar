@@ -4,7 +4,7 @@ import { useState } from "react";
 import { storeHandoff } from "@/lib/calculators/handoff";
 import { emptyScenario } from "@/lib/calculators/model";
 import type { SearchResponse, SearchRow } from "@/lib/search";
-import { computeDscr, DEFAULT_ASSUMPTIONS } from "@/lib/dscr";
+import { computeDscr } from "@/lib/dscr";
 import { money, pct, ratio } from "@/lib/format";
 import { Modal } from "./Modal";
 import { PropertyPhoto } from "./ListingCard";
@@ -24,6 +24,7 @@ export function ScenarioDialog({
   const [handoffError, setHandoffError] = useState(false);
   const { listing: l, rent, need } = row;
   const p = data.params;
+  const assumptions = row.assumptions;
   const result = computeDscr({
     price: l.price,
     monthlyRent: rent.monthlyRent,
@@ -31,7 +32,8 @@ export function ScenarioDialog({
     downPct: p.downPct,
     interestOnly: p.interestOnly,
     fortyYear: p.fortyYear,
-  });
+    monthlyHoa: l.monthlyHoa ?? 0,
+  }, assumptions);
   return (
     <Modal title="PROPERTY / FINANCING SCENARIO" onClose={onClose} wide>
       <div className="scenario-grid">
@@ -57,22 +59,22 @@ export function ScenarioDialog({
           <section className="property-payment" aria-label="Estimated monthly housing payment">
             <span className="eyebrow">ESTIMATED HOUSING PAYMENT</span>
             <strong>{money(result.pitia)}<small>/ month</small></strong>
-            <p>Principal, interest, assumed taxes and insurance.</p>
+            <p>Principal, interest, estimated taxes, insurance and supplied HOA.</p>
           </section>
           <dl className="breakdown property-costs">
             <div><dt>{p.interestOnly ? "Interest-only payment" : "Principal & interest"}</dt><dd>{money(result.monthlyPI)}/mo</dd></div>
-            <div><dt>Property taxes · assumed</dt><dd>{money(l.price * DEFAULT_ASSUMPTIONS.taxRate / 12)}/mo</dd></div>
-            <div><dt>Insurance · assumed</dt><dd>{money(l.price * DEFAULT_ASSUMPTIONS.insuranceRate / 12)}/mo</dd></div>
-            <div><dt>HOA / Mello-Roos</dt><dd>Not included</dd></div>
+            <div><dt>Property taxes · assumed</dt><dd>{money(l.price * assumptions.taxRate / 12)}/mo</dd></div>
+            <div><dt>Insurance · assumed</dt><dd>{money(l.price * assumptions.insuranceRate / 12)}/mo</dd></div>
+            <div><dt>HOA dues{row.hoaKnown ? "" : " · unknown"}</dt><dd>{row.hoaKnown ? `${money(l.monthlyHoa ?? 0)}/mo` : "$0 assumed · verify"}</dd></div>
             <div className="total"><dt>Modeled monthly total</dt><dd>{money(result.pitia)}/mo</dd></div>
           </dl>
           <div className="assumptions">
             <Icon name="info" />
             <p>
               Estimates, not a quote. Annual tax:{" "}
-              {(DEFAULT_ASSUMPTIONS.taxRate * 100).toFixed(2)}% of price. Annual
-              insurance: {(DEFAULT_ASSUMPTIONS.insuranceRate * 100).toFixed(2)}
-              %. HOA dues, Mello-Roos and operating expenses are excluded.
+              {(assumptions.taxRate * 100).toFixed(2)}% of price. Annual
+              insurance: {(assumptions.insuranceRate * 100).toFixed(2)}
+              %. State tax estimate; local taxes and premiums vary. Unknown HOA is modeled at $0. Flood, special assessments and operating expenses are excluded.
             </p>
           </div>
         </div>
@@ -149,7 +151,14 @@ export function ScenarioDialog({
           <p className="need-note">
             {need.reachable
               ? `Modeled path to 1.0: ${pct(need.downPct)} down (${money(need.downPayment)}) at this scenario’s rate. A different down payment may change actual pricing.`
-              : "This sample scenario does not reach 1.0 within the 50% down payment limit."}
+              : "Rent does not cover estimated fixed housing costs; more down alone cannot reach 1.0."}
+          </p>
+          <p className="need-note">
+            {row.rateNeed.reachable
+              ? row.rateNeed.alreadyMeets
+                ? "Current scenario already meets 1.0; no rate reduction needed."
+                : `Rate needed at ${pct(p.downPct)} down: ${(row.rateNeed.annualRate * 100).toFixed(3)}% or lower. This is a mathematical target; availability and buydown cost require pricing verification.`
+              : "A rate reduction alone cannot reach 1.0 at this down payment, even at 0% interest."}
           </p>
           <button className="btn btn-primary full" onClick={onReview}>
             Request a scenario review <Icon name="arrow" />
@@ -168,11 +177,12 @@ export function ScenarioDialog({
                 downPct: String(p.downPct * 100),
                 ratePct: String(data.rate.rate * 100),
                 termYears: p.fortyYear ? "40" : "30",
-                taxes: ((l.price * DEFAULT_ASSUMPTIONS.taxRate) / 12).toFixed(
+                hoa: String(l.monthlyHoa ?? 0),
+                taxes: ((l.price * assumptions.taxRate) / 12).toFixed(
                   2,
                 ),
                 insurance: (
-                  (l.price * DEFAULT_ASSUMPTIONS.insuranceRate) /
+                  (l.price * assumptions.insuranceRate) /
                   12
                 ).toFixed(2),
               };

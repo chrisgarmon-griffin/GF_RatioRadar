@@ -25,7 +25,7 @@ const steps = [
     ],
     href: "/calculators/dscr/",
     cta: "Open DSCR calculator",
-    note: "The explorer omits HOA and flood costs. The detailed calculator asks you to enter them. Rates and program availability require verification.",
+    note: "The explorer includes supplied HOA; unknown HOA is modeled at $0 and flagged. Flood costs are excluded. The detailed calculator asks you to enter them. Rates and program availability require verification.",
     visual: ["RENT", "HOUSING COST", "DSCR"],
   },
   {
