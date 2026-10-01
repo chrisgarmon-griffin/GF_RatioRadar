@@ -68,7 +68,10 @@ export function createHouseCanaryRent(o: HouseCanaryOptions): RentProvider {
     estimate(l: Listing) {
       const key = `${l.address}|${l.zip}`.toLowerCase();
       return cache.get(key, async () => {
-        const qs = new URLSearchParams({ address: l.address, city: l.city, state: l.state, zipcode: l.zip });
+        const qs = new URLSearchParams({ address: l.address, zipcode: l.zip });
+        // Test addresses come back with only street and ZIP. Send city and state when we have them.
+        if (l.city) qs.set("city", l.city);
+        if (l.state) qs.set("state", l.state);
         const body = await fetchJson(
           "housecanary",
           `${o.baseUrl ?? BASE}/property/rental_value?${qs}`,

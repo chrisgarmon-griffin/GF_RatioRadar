@@ -48,6 +48,15 @@ describe("HouseCanary adapter", () => {
     expect(url).toContain("state=CA");
     expect((init.headers as Record<string, string>).authorization).toBe("Basic " + Buffer.from("k:s").toString("base64"));
   });
+  it("omits city and state when they are empty (test addresses)", async () => {
+    const fetchImpl = vi.fn(async () => ok([hcBody({ price_mean: 1800 })]));
+    const p = createHouseCanaryRent({ key: "k", secret: "s", fetchImpl });
+    await p.estimate({ ...listing, address: "123 Main St", zip: "12345", city: "", state: "" });
+    const url = (fetchImpl.mock.calls[0] as unknown as [string])[0];
+    expect(url).toContain("address=123+Main+St");
+    expect(url).not.toContain("city=");
+    expect(url).not.toContain("state=");
+  });
   it("maps HTTP errors and does not cache failures", async () => {
     const fetchImpl = vi.fn(async () => new Response("no", { status: 401 }));
     const p = createHouseCanaryRent({ key: "k", secret: "bad", fetchImpl });
