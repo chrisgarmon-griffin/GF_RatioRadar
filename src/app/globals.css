@@ -3050,14 +3050,14 @@ input[type="checkbox"] {
 .revestor-parent {
   font-family: "Plus Jakarta Sans Variable", sans-serif;
   font-size: 11px;
-  font-weight: 650;
+  font-weight: 550;
   letter-spacing: 0.005em;
   line-height: 1.1;
 }
 .revestor-name {
   font-family: "Plus Jakarta Sans Variable", sans-serif;
   font-size: 21px;
-  font-weight: 750;
+  font-weight: 600;
   letter-spacing: -0.055em;
   line-height: 1;
 }
@@ -4762,3 +4762,12 @@ input[type="checkbox"] {
 .scenario-toolbar .term-switch { height: var(--control-height); box-sizing: border-box; background: #f3f1ee; }
 .scenario-toolbar .term-switch button { min-height: 0; height: 100%; color: #45413e; }
 .scenario-toolbar .term-switch button[aria-pressed="true"] { color: var(--red); box-shadow: 0 1px 4px #00000012; }
+
+/* Property details: payment and costs beside rental coverage and financing. */
+.property-payment { background: #fff4f3; border: 1px solid #bd0c0c20; border-radius: var(--card-radius); padding: var(--space-24); margin-top: var(--space-24); }
+.property-payment > strong { display: block; font-size: clamp(28px, 3vw, 40px); line-height: 1.2; color: var(--red); font-variant-numeric: tabular-nums; margin-top: var(--space-12); }
+.property-payment > strong small { font: 13px var(--sans); color: #45413e; margin-left: var(--space-8); }
+.property-payment p { font-size: 12px; line-height: 1.6; color: #45413e; margin-top: var(--space-8); }
+.property-costs { margin-top: var(--space-16); }
+.property-costs dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.property-financing-title { font-size: 14px; font-weight: 600; margin-top: var(--space-24); margin-bottom: var(--space-8); }

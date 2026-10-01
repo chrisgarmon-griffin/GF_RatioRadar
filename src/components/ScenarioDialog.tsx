@@ -54,13 +54,25 @@ export function ScenarioDialog({
             </p>
             <strong>{money(l.price)}</strong>
           </div>
+          <section className="property-payment" aria-label="Estimated monthly housing payment">
+            <span className="eyebrow">ESTIMATED HOUSING PAYMENT</span>
+            <strong>{money(result.pitia)}<small>/ month</small></strong>
+            <p>Principal, interest, assumed taxes and insurance.</p>
+          </section>
+          <dl className="breakdown property-costs">
+            <div><dt>{p.interestOnly ? "Interest-only payment" : "Principal & interest"}</dt><dd>{money(result.monthlyPI)}/mo</dd></div>
+            <div><dt>Property taxes · assumed</dt><dd>{money(l.price * DEFAULT_ASSUMPTIONS.taxRate / 12)}/mo</dd></div>
+            <div><dt>Insurance · assumed</dt><dd>{money(l.price * DEFAULT_ASSUMPTIONS.insuranceRate / 12)}/mo</dd></div>
+            <div><dt>HOA / Mello-Roos</dt><dd>Not included</dd></div>
+            <div className="total"><dt>Modeled monthly total</dt><dd>{money(result.pitia)}/mo</dd></div>
+          </dl>
           <div className="assumptions">
             <Icon name="info" />
             <p>
-              Sample inputs, not a quote. Annual tax:{" "}
+              Estimates, not a quote. Annual tax:{" "}
               {(DEFAULT_ASSUMPTIONS.taxRate * 100).toFixed(2)}% of price. Annual
               insurance: {(DEFAULT_ASSUMPTIONS.insuranceRate * 100).toFixed(2)}
-              %. HOA dues and operating expenses are excluded.
+              %. HOA dues, Mello-Roos and operating expenses are excluded.
             </p>
           </div>
         </div>
@@ -83,26 +95,11 @@ export function ScenarioDialog({
               : "Estimated rent falls short of the modeled housing payment."}{" "}
             This is not a credit decision.
           </p>
+          <h3 className="property-financing-title">Financing snapshot</h3>
           <dl className="breakdown">
             <div>
-              <dt>Sample monthly rent</dt>
+              <dt>{rent.source === "fixture" ? "Sample monthly rent" : "Estimated monthly rent"}</dt>
               <dd>{money(rent.monthlyRent)}</dd>
-            </div>
-            <div>
-              <dt>
-                {p.interestOnly
-                  ? "Interest-only payment"
-                  : "Principal & interest"}
-              </dt>
-              <dd>{money(result.monthlyPI)}</dd>
-            </div>
-            <div>
-              <dt>Assumed taxes & insurance</dt>
-              <dd>{money(result.monthlyTaxIns)}</dd>
-            </div>
-            <div className="total">
-              <dt>Modeled housing payment</dt>
-              <dd>{money(result.pitia)}/mo</dd>
             </div>
             <div>
               <dt>Down payment · {pct(p.downPct)}</dt>
@@ -114,7 +111,7 @@ export function ScenarioDialog({
             </div>
             <div>
               <dt>
-                Sample rate ·{" "}
+                {data.rate.source === "fixture" ? "Sample rate" : "Scenario rate"} ·{" "}
                 {p.interestOnly
                   ? "interest-only"
                   : p.fortyYear
@@ -141,6 +138,7 @@ export function ScenarioDialog({
               </span>
             </div>
           </div>
+          <p className="hint">Rent source: {rent.source === "fixture" ? "Illustrative sample data" : rent.source}. Rate as of {data.rate.asOf}. Monthly total excludes costs not supplied.</p>
           {rent.fsd !== undefined && (
             <p className="hint">
               Rent source: {rent.source}. Forecast standard deviation:{" "}
