@@ -22,8 +22,10 @@ export function CompareDialog({
     ["Down payment", (r) => money(r.listing.price * data.params.downPct)],
     [
       "Down to reach 1.0",
-      (r) => (r.need.reachable ? pct(r.need.downPct) : "Above 50%"),
+      (r) => (r.need.reachable ? pct(r.need.downPct) : "Fixed costs exceed rent"),
     ],
+    ["Rate to reach 1.0", (r) => r.rateNeed.reachable ? r.rateNeed.alreadyMeets ? "Already meets" : `${(r.rateNeed.annualRate * 100).toFixed(3)}%` : "Not reachable"],
+    ["HOA / month", (r) => r.hoaKnown ? money(r.listing.monthlyHoa ?? 0) : "Unknown · $0 assumed"],
     ["Beds / baths", (r) => `${r.listing.beds} / ${r.listing.baths}`],
     ["Interior area", (r) => `${r.listing.sqft.toLocaleString()} sq ft`],
   ];
@@ -86,8 +88,7 @@ export function CompareDialog({
           </table>
         </div>
         <p className="hint">
-          Sample data and illustrative photos. The modeled payment excludes HOA
-          dues and operating expenses. A 1.0 ratio is not an eligibility
+          Sample data and illustrative photos. Supplied HOA is included; unknown HOA is modeled at $0. Operating expenses are excluded. A 1.0 ratio is not an eligibility
           determination.
         </p>
       </div>

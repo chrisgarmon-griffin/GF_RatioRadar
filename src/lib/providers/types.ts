@@ -10,6 +10,8 @@ export interface Listing {
   sqft: number;
   propertyType: "SFR" | "Condo" | "Townhome" | "2-4 Unit";
   daysOnMarket: number;
+  /** Monthly HOA from listing; null/undefined means unknown, never confirmed zero. */
+  monthlyHoa?: number | null;
   /** Licensed listing media URL, or null for the accessible no-photo fallback. Fixture images are illustrative only. */
   photoUrl: string | null;
   source: string;

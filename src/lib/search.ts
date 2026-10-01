@@ -1,6 +1,9 @@
 import {
   computeDscr,
   requiredDownPayment,
+  requiredRate,
+  type RateNeed,
+  type Assumptions,
   TARGET_DSCR,
   type DownPaymentNeed,
 } from "./dscr";
@@ -14,6 +17,8 @@ import {
   type RentEstimate,
 } from "./providers";
 
+import { propertyAssumptions } from "./property-costs";
+
 export type SearchMode = "forward" | "inverse";
 
 export interface SearchParams {
@@ -24,7 +29,7 @@ export interface SearchParams {
   mode: SearchMode;
   interestOnly: boolean;
   fortyYear: boolean;
-  /** Forward mode: the down payment used for every ratio. Inverse mode: the most the buyer will bring. */
+  /** Down payment used for every ratio; inverse mode filters to DSCR at least 1.0. */
   downPct: number;
 }
 
@@ -38,6 +43,9 @@ export interface SearchRow {
   dscrHigh: number;
   /** Smallest down payment that reaches 1.0 with the selected toggles. */
   need: DownPaymentNeed;
+  rateNeed: RateNeed;
+  assumptions: Assumptions;
+  hoaKnown: boolean;
 }
 
 export interface SearchResponse {
@@ -114,23 +122,29 @@ export async function runSearch(p: SearchParams): Promise<SearchResponse> {
         if (e instanceof RentUnavailableError) return null;
         throw e;
       }
+      const assumptions = propertyAssumptions(listing.state);
       const base = {
+        monthlyHoa: listing.monthlyHoa ?? 0,
         price: listing.price,
         annualRate: rate.rate,
         interestOnly: p.interestOnly,
         fortyYear: p.fortyYear,
       };
       const at = (monthlyRent: number, downPct: number) =>
-        computeDscr({ ...base, monthlyRent, downPct }).dscr;
+        computeDscr({ ...base, monthlyRent, downPct }, assumptions).dscr;
       return {
         listing,
         rent,
+        assumptions,
+        hoaKnown: listing.monthlyHoa != null,
+        rateNeed: requiredRate({ ...base, monthlyRent: rent.monthlyRent, downPct: p.downPct }, TARGET_DSCR, assumptions),
         dscr: at(rent.monthlyRent, p.downPct),
         dscrLow: at(rent.low ?? rent.monthlyRent, p.downPct),
         dscrHigh: at(rent.high ?? rent.monthlyRent, p.downPct),
         need: requiredDownPayment(
           { ...base, monthlyRent: rent.monthlyRent },
           TARGET_DSCR,
+          assumptions,
         ),
       };
     },
@@ -140,11 +154,9 @@ export async function runSearch(p: SearchParams): Promise<SearchResponse> {
   const sorted =
     p.mode === "inverse"
       ? rows
-          .filter((r) => r.need.reachable && r.need.downPct <= p.downPct + 1e-9)
+          .filter((r) => r.dscr >= TARGET_DSCR)
           .sort((a, b) =>
-            a.need.reachable && b.need.reachable
-              ? a.need.downPct - b.need.downPct
-              : 0,
+            b.dscr - a.dscr,
           )
       : rows.sort((a, b) => b.dscr - a.dscr);
 

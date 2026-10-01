@@ -118,6 +118,11 @@ export function ListingCard({
             <strong>{pct(params.downPct)}</strong>
           </div>
         </div>
+        <div className="dscr-paths" aria-label="Paths to 1.0 DSCR">
+          <div><span>Down to reach 1.0</span><strong>{need.reachable ? `${pct(need.downPct)} · ${money(need.downPayment)}` : "Not reachable"}</strong></div>
+          <div><span>Rate at {pct(params.downPct)} down</span><strong>{row.rateNeed.reachable ? row.rateNeed.alreadyMeets ? "Already meets 1.0" : `${(row.rateNeed.annualRate * 100).toFixed(3)}% or lower` : "Not reachable at 0%"}</strong></div>
+          <small>{row.hoaKnown ? "Supplied HOA included." : "HOA unknown · $0 assumed; verify."} Target rate is not a quote.</small>
+        </div>
         <div className="property-bottom">
           <span className={`coverage ${dscr >= 1 ? "good" : "neutral"}`}>
             <span className="status-dot" />
@@ -125,7 +130,7 @@ export function ListingCard({
               ? "At or above 1.0"
               : need.reachable
                 ? `1.0 at ${pct(need.downPct)} down`
-                : "Below 1.0 at 50% down"}
+                : "Fixed costs exceed rent"}
           </span>
           <button className="text-button" onClick={() => onSelect(row)}>
             View scenario <Icon name="arrow" />

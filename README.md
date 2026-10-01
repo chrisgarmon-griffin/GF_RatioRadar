@@ -22,10 +22,10 @@ npm run typecheck
 
 ## Assumptions to confirm
 
-- DSCR = rent / PITIA. Tax 1.10% and insurance 0.45% of price are placeholders, not sourced.
-- 20% minimum down, 50% cap before a deal reads "unreachable".
+- DSCR = rent / PITIA, including supplied monthly HOA. State investment-property estimates: CA 0.70%, TX 1.90%, FL 1.02%; insurance 0.30% annually. Unknown HOA is flagged and modeled at $0.
+- 20% down by default. Reverse solver can report required down above 50%; this is mathematical feasibility, not loan eligibility.
 - 40-year and interest-only are mutually exclusive in the UI (IO is priced on interest alone).
-- Fixture rate adjusters (+0.25% IO, +0.125% 40-year, -0.125% at 25%+ down) are invented until BankingBridge is wired.
+- Fixed 7.99% example rate until BankingBridge is verified. Reverse rate is a mathematical target, not available pricing or a buydown-cost quote. See docs/dscr-mvp.md.
 
 ## Product identity
 

@@ -333,7 +333,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
             <span className="switch-track">
               <span />
             </span>
-            Find 1.0+ scenarios
+            Only DSCR 1.0+
           </button>
           <button
             className="filter-button"
@@ -410,7 +410,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
           <span>
             <Icon name="info" />
             {p.mode === "inverse"
-              ? "Shows properties that reach 1.0 within your down payment cap."
+              ? "Shows properties at or above 1.0 with your selected financing."
               : "DSCR = monthly rent ÷ modeled housing payment."}{" "}
             Estimates only.
           </span>
@@ -418,7 +418,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
             {data && !loading
               ? `${data.rate.source === "fixture" ? "Sample rate" : "Scenario rate"} ${(data.rate.rate * 100).toFixed(3)}% · ${data.rate.asOf}`
               : "Sample pricing"}{" "}
-            · HOA excluded
+            · HOA included when supplied; otherwise $0 assumed
           </span>
         </div>
       </div>
@@ -438,7 +438,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
           <h2>
             {p.mode === "inverse"
               ? "Find your way to 1.0."
-              : "The next move is yours."}
+              : "Search by DSCR."}
             <span className="result-count" role="status">
               {loading
                 ? "Loading…"
@@ -460,7 +460,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
             <span className="sr-only">Sort properties</span>
             <select value={sort} onChange={(e) => setSort(e.target.value)}>
               <option value="default">
-                {p.mode === "inverse" ? "Lowest required down" : "Highest DSCR"}
+                {p.mode === "inverse" ? "Highest DSCR" : "Highest DSCR"}
               </option>
               <option value="price-low">Price: low to high</option>
               <option value="price-high">Price: high to low</option>
@@ -533,7 +533,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
               {data && data.skipped > 0
                 ? "Some properties could not be assessed because rent estimates were unavailable. Try again later or broaden your search."
                 : p.mode === "inverse"
-                  ? "Try a larger down payment or a different loan structure to explore more 1.0 scenarios."
+                  ? "Turn off Only DSCR 1.0+ to see the down payment or rate needed for each property."
                   : "Try a broader budget, a different market, or clear the ZIP code."}
             </p>
             <button className="btn btn-ink" onClick={() => apply(DEFAULTS)}>
@@ -572,6 +572,7 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
                     <th scope="col">Est. DSCR</th>
                     <th scope="col">Sample rent / mo</th>
                     <th scope="col">Down to 1.0</th>
+                    <th scope="col">Rate to 1.0</th>
                     <th scope="col">Scenario</th>
                   </tr>
                 </thead>
@@ -602,8 +603,9 @@ export function Search({ initialParams }: { initialParams: SearchParams }) {
                       </td>
                       <td>{money(r.rent.monthlyRent)}</td>
                       <td>
-                        {r.need.reachable ? pct(r.need.downPct) : "Above 50%"}
+                        {r.need.reachable ? pct(r.need.downPct) : "Fixed costs exceed rent"}
                       </td>
+                      <td>{r.rateNeed.reachable ? r.rateNeed.alreadyMeets ? "Already meets" : `${(r.rateNeed.annualRate * 100).toFixed(3)}%` : "Not reachable"}</td>
                       <td>
                         <button
                           className="text-button"

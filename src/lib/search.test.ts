@@ -29,7 +29,7 @@ describe("runSearch", () => {
     expect(rows.length).toBeGreaterThan(0);
     for (const r of rows) {
       expect(r.need.reachable).toBe(true);
-      if (r.need.reachable) expect(r.need.downPct).toBeLessThanOrEqual(0.3 + 1e-9);
+      expect(r.dscr).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -47,3 +47,13 @@ describe("runSearch", () => {
     expect(cheap.rows.every((r) => r.listing.price <= 300000)).toBe(true);
   });
 });
+
+ it("uses the CEO example rate and state investment-property costs", async () => {
+   const result = await runSearch(base);
+   expect(result.rate.rate).toBe(0.0799);
+   for (const row of result.rows) {
+     expect(row.assumptions.insuranceRate).toBe(0.003);
+     expect(row.assumptions.taxRate).toBe(({ CA: 0.007, TX: 0.019, FL: 0.0102 } as Record<string, number>)[row.listing.state]);
+     expect(row.hoaKnown).toBe(false);
+   }
+ });

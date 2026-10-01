@@ -18,9 +18,9 @@ export interface Assumptions {
 
 export const DEFAULT_ASSUMPTIONS: Assumptions = {
   taxRate: 0.011,
-  insuranceRate: 0.0045,
+  insuranceRate: 0.003,
   minDownPct: 0.2,
-  maxDownPct: 0.5,
+  maxDownPct: 1,
 };
 
 export interface Scenario {
@@ -33,6 +33,8 @@ export interface Scenario {
   interestOnly: boolean;
   /** 40-year amortization instead of 30. Ignored when interestOnly is true. */
   fortyYear: boolean;
+  /** Monthly listing HOA dues; omitted dues must be disclosed by the caller. */
+  monthlyHoa?: number;
 }
 
 export const TARGET_DSCR = 1.0;
@@ -64,7 +66,7 @@ export function computeDscr(s: Scenario, a: Assumptions = DEFAULT_ASSUMPTIONS): 
   const loanAmount = s.price - downPayment;
   const monthlyPI = loanAmount * paymentFactor(s.annualRate, s.interestOnly, s.fortyYear);
   const taxIns = monthlyTaxIns(s.price, a);
-  const pitia = monthlyPI + taxIns;
+  const pitia = monthlyPI + taxIns + (s.monthlyHoa ?? 0);
   return {
     loanAmount,
     downPayment,
@@ -89,10 +91,33 @@ export function requiredDownPayment(
   target: number = TARGET_DSCR,
   a: Assumptions = DEFAULT_ASSUMPTIONS,
 ): DownPaymentNeed {
-  const affordablePI = s.monthlyRent / target - monthlyTaxIns(s.price, a);
+  const affordablePI = s.monthlyRent / target - monthlyTaxIns(s.price, a) - (s.monthlyHoa ?? 0);
   if (affordablePI <= 0) return { reachable: false, reason: "rent-below-tax-ins" };
   const maxLoan = affordablePI / paymentFactor(s.annualRate, s.interestOnly, s.fortyYear);
   const downPct = Math.max(a.minDownPct, 1 - maxLoan / s.price);
   if (downPct > a.maxDownPct) return { reachable: false, reason: "exceeds-max-down" };
   return { reachable: true, downPct, downPayment: s.price * downPct };
+}
+
+export type RateNeed =
+  | { reachable: true; annualRate: number; alreadyMeets: boolean }
+  | { reachable: false; reason: "fixed-costs" | "zero-rate-insufficient" };
+
+/** Highest rate at or below the current rate that meets the target at unchanged down payment.
+ * This is a mathematical target, not available pricing or a buydown-cost quote. */
+export function requiredRate(s: Scenario, target = TARGET_DSCR, a = DEFAULT_ASSUMPTIONS): RateNeed {
+  const affordablePI = s.monthlyRent / target - monthlyTaxIns(s.price, a) - (s.monthlyHoa ?? 0);
+  if (affordablePI <= 0) return { reachable: false, reason: "fixed-costs" };
+  const loan = s.price * (1 - s.downPct);
+  if (computeDscr(s, a).dscr >= target)
+    return { reachable: true, annualRate: s.annualRate, alreadyMeets: true };
+  if (loan * paymentFactor(0, s.interestOnly, s.fortyYear) > affordablePI)
+    return { reachable: false, reason: "zero-rate-insufficient" };
+  let low = 0, high = s.annualRate;
+  for (let i = 0; i < 80; i++) {
+    const mid = (low + high) / 2;
+    if (loan * paymentFactor(mid, s.interestOnly, s.fortyYear) <= affordablePI) low = mid;
+    else high = mid;
+  }
+  return { reachable: true, annualRate: low, alreadyMeets: false };
 }

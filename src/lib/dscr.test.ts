@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeDscr, paymentFactor, requiredDownPayment, type Scenario } from "./dscr";
+import { computeDscr, paymentFactor, requiredDownPayment, requiredRate, DEFAULT_ASSUMPTIONS, type Scenario } from "./dscr";
 
 const base: Scenario = {
   price: 400_000,
@@ -54,13 +54,13 @@ describe("requiredDownPayment", () => {
     expect(computeDscr({ ...weak, downPct: need.downPct }).dscr).toBeCloseTo(1.0, 6);
   });
   it("is unreachable when rent cannot cover tax and insurance", () => {
-    expect(requiredDownPayment({ ...base, monthlyRent: 500 })).toEqual({
+    expect(requiredDownPayment({ ...base, monthlyRent: 400 })).toEqual({
       reachable: false,
       reason: "rent-below-tax-ins",
     });
   });
   it("is unreachable past the max down cap", () => {
-    expect(requiredDownPayment({ ...base, monthlyRent: 1_800 })).toEqual({
+    expect(requiredDownPayment({ ...base, monthlyRent: 1_800 }, 1, { ...DEFAULT_ASSUMPTIONS, maxDownPct: 0.5 })).toEqual({
       reachable: false,
       reason: "exceeds-max-down",
     });
@@ -73,3 +73,25 @@ describe("requiredDownPayment", () => {
     if (std.reachable && io.reachable) expect(io.downPct).toBeLessThan(std.downPct);
   });
 });
+
+ describe("MVP reverse rate and HOA", () => {
+  it("solves back to 1.0 at unchanged down payment for every payment structure", () => {
+    for (const patch of [{}, { fortyYear: true }, { interestOnly: true }]) {
+      const scenario = { ...base, ...patch, monthlyRent: 1800, monthlyHoa: 150 };
+      const need = requiredRate(scenario);
+      expect(need.reachable).toBe(true);
+      if (need.reachable) expect(computeDscr({ ...scenario, annualRate: need.annualRate }).dscr).toBeCloseTo(1, 8);
+    }
+  });
+  it("reports when even zero interest cannot reach the target", () => {
+    expect(requiredRate({ ...base, monthlyRent: 1000 })).toMatchObject({ reachable: false, reason: "zero-rate-insufficient" });
+    expect(requiredRate({ ...base, monthlyRent: 400 })).toMatchObject({ reachable: false, reason: "fixed-costs" });
+  });
+  it("includes HOA in both forward and reverse calculations", () => {
+    const scenario = { ...base, monthlyRent: 1800, monthlyHoa: 300 };
+    expect(computeDscr(scenario).pitia - computeDscr({ ...scenario, monthlyHoa: 0 }).pitia).toBeCloseTo(300);
+    const need = requiredDownPayment(scenario);
+    expect(need.reachable).toBe(true);
+    if (need.reachable) expect(computeDscr({ ...scenario, downPct: need.downPct }).dscr).toBeCloseTo(1, 8);
+  });
+ });

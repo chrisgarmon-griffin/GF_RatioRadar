@@ -1,7 +1,7 @@
 export const FAQ = [
   {
     q: "What does the DSCR actually measure?",
-    a: "The debt service coverage ratio compares monthly rent with the modeled monthly housing payment. Ratio Radar uses principal, interest, assumed property taxes and insurance. It does not currently include HOA dues. It is a comparison tool, not a complete view of ownership costs.",
+    a: "The debt service coverage ratio compares monthly rent with the modeled monthly housing payment. Ratio Radar uses principal, interest, state-based estimated property taxes, insurance and supplied HOA dues. Unknown HOA is modeled at $0 and flagged for verification. It is a comparison tool, not a complete view of ownership costs.",
   },
   {
     q: "Why is 1.0 the benchmark?",
@@ -13,7 +13,7 @@ export const FAQ = [
   },
   {
     q: "Where do the numbers and photos come from?",
-    a: "The current preview uses fictional listings, sample rent ranges and sample interest rates. Stock photographs illustrate the design and are not photos of the stated addresses. Taxes are assumed at 1.10% and insurance at 0.45% of price annually. Live listing, rent and rate providers are not connected.",
+    a: "The current preview uses fictional listings, sample rent ranges and sample interest rates. Stock photographs illustrate the design and are not photos of the stated addresses. Taxes use Griffin’s state investment-property estimates; insurance is assumed at 0.30% of price annually. The example rate is 7.99%, not live pricing. Live listing, rent and rate providers are not connected.",
   },
   {
     q: "What happens when I request a review?",
