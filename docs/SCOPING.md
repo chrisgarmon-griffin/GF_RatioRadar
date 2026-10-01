@@ -89,7 +89,7 @@ Three answers unlock the build:
 |---|---|---|
 | Active listings | Existing Revestor feed, or Constellation / IDX | Blocked on section 5 |
 | Photos | Listing media if licensed, else Street View live render as fallback | Blocked on section 5 |
-| Rent | HouseCanary (locked); HUD and Census as cross-check | Adapter built, untested against a live account |
+| Rent | HouseCanary (locked); HUD and Census as cross-check | Adapter built and confirmed with a HouseCanary test key (2026-10-01). Production key and Premium price still to confirm |
 | Rate | BankingBridge (locked) | Adapter seam built, contract assumed. Needs BankingBridge docs and a sandbox key |
 | Tax and insurance | Census county tax data replaces the 1.10% placeholder | To build |
 
