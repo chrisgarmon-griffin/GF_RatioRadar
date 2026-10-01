@@ -112,6 +112,18 @@ A Chrome extension that overlays DSCR on Zillow and Redfin pages avoids the list
 
 Constellation figures are Bill's from the meeting. Confirm them in a written quote.
 
+### HouseCanary rent cost (from Griffin's September 2026 bill)
+
+| Item | Price |
+|---|---|
+| rental_value (Premium) | $3.15 per successful call |
+| value (Premium) | $4.20 per call |
+| Basic endpoints (details, flood, tax_history, owner_occupied and others) | $0.53 per call |
+| Platform fee | $1,050 a month, already paid |
+| Test-key calls | Free |
+
+Rent for every listing in every search at $3.15 is not affordable at scale: 50 listings is $157.50 for one uncached search. Cost controls: persistent cache keyed by address (the model refreshes monthly), live rent only after a user shows intent, a cheaper rent source for the card display, and daily spend caps.
+
 ## 8. What makes it better than a calculator
 
 - DSCR computed instantly on every listing, not entered by hand.

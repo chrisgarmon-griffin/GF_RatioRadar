@@ -14,7 +14,9 @@ import { ProviderError, type Listing, type RentEstimate, type RentProvider } fro
  *           "result": { "price_mean": n, "price_lwr": n, "price_upr": n, "fsd": n } },
  *         "address_info": { ... } } ]
  * A non-zero api_code inside a 200 means the property could not be valued.
- * The docs label this endpoint "Pricing Tier: Premium". Confirm the contracted per-call price before launch.
+ * Price: the docs label this endpoint Premium. Griffin's 9/2026 bill shows 94 rental_value calls at $296.10,
+ * which is $3.15 per successful call (property/value is $4.20, Basic endpoints $0.53). Test-key calls are free.
+ * Cache hard and never call this per listing on every page view.
  */
 
 const BASE = "https://api.housecanary.com/v2";

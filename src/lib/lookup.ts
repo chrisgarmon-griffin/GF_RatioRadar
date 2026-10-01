@@ -83,3 +83,22 @@ export function makeLimiter(max: number, windowMs: number, now: () => number = D
     return true;
   };
 }
+
+/**
+ * Ceiling on billed lookups per UTC day, per server instance. Serverless instances do not share memory,
+ * so this is a guard against runaway cost, not an exact budget. A durable counter needs a shared store.
+ */
+export function makeDailyCap(max: number, now: () => number = Date.now) {
+  let day = "";
+  let used = 0;
+  return () => {
+    const today = new Date(now()).toISOString().slice(0, 10);
+    if (today !== day) {
+      day = today;
+      used = 0;
+    }
+    if (used >= max) return false;
+    used++;
+    return true;
+  };
+}

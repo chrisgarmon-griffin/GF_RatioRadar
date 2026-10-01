@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { lookupAddress, makeLimiter, validateLookup } from "./lookup";
+import { lookupAddress, makeDailyCap, makeLimiter, validateLookup } from "./lookup";
 
 const good = { address: "2439 Russell St", zip: "94705", price: 900000 };
 
@@ -37,5 +37,15 @@ describe("makeLimiter", () => {
     expect(allow("b")).toBe(true);
     t = 1001;
     expect(allow("a")).toBe(true);
+  });
+});
+
+describe("makeDailyCap", () => {
+  it("stops at the cap and resets the next UTC day", () => {
+    let t = Date.UTC(2026, 9, 1, 12);
+    const ok = makeDailyCap(2, () => t);
+    expect([ok(), ok(), ok()]).toEqual([true, true, false]);
+    t = Date.UTC(2026, 9, 2, 0, 1);
+    expect(ok()).toBe(true);
   });
 });
