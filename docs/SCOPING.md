@@ -62,7 +62,7 @@ Before launch:
 - NMLS number in the footer (`NEXT_PUBLIC_NMLS`). Required on a mortgage lender site, not set.
 - Compliance review of the consent text and disclosures. Both are drafts.
 - Conta fonts. The font files were not available, so the site uses the fallback stack. Add the font-face block from the Griffin brand build.
-- HouseCanary attribution. Their terms require a link to HouseCanary.com wherever its data is shown publicly. A text link renders when rents come from HouseCanary. Replace it with the official snippet from the account's API Keys page before launch.
+- HouseCanary attribution. Their terms require a link to HouseCanary.com wherever its data is shown publicly. The official attribution snippet from the account's API Keys page renders whenever rents come from HouseCanary (`HouseCanaryAttribution.tsx`).
 - Lead handoff to the LOS or CRM. Replace `saveLead` in `src/lib/leads.ts`.
 - Application URL (`NEXT_PUBLIC_PREQUAL_URL`) shown after a lead is sent.
 

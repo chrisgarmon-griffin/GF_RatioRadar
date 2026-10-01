@@ -5,6 +5,7 @@ import type { SearchMode, SearchParams, SearchResponse, SearchRow } from "@/lib/
 import { pct } from "@/lib/format";
 import { ListingCard } from "./ListingCard";
 import { LeadDialog } from "./LeadDialog";
+import { HouseCanaryAttribution } from "./HouseCanaryAttribution";
 
 const STATES = ["CA", "TX", "FL"];
 const DOWNS = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5];
@@ -156,14 +157,7 @@ export function Search() {
           )}
         </div>
 
-        {data && !error && data.rows.some((r) => r.rent.source === "HouseCanary") && (
-          // HouseCanary requires a visible link wherever its data is shown publicly. Swap in the official
-          // attribution snippet from the account's API Keys page (it carries an account-specific beacon).
-          <p className="meta">
-            Rent estimates from{" "}
-            <a href="https://www.housecanary.com" target="_blank" rel="noreferrer noopener">HouseCanary</a>.
-          </p>
-        )}
+        {data && !error && data.rows.some((r) => r.rent.source === "HouseCanary") && <HouseCanaryAttribution />}
         {error && <div className="state-box" role="alert">{error}</div>}
         {loading && !data && <div className="grid"><div className="skeleton" /><div className="skeleton" /><div className="skeleton" /></div>}
         {data && !error && (
