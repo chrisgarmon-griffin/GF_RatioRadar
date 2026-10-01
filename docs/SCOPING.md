@@ -51,6 +51,7 @@ Built:
 - Inverse mode ("Find 1.0 deals"): listings that reach 1.0 within the buyer's down payment cap, sorted by lowest down payment.
 - Interest-only and 40-year toggles (mutually exclusive), required down payment per property.
 - Lead capture: "check my loan options" opens a form with consent language, honeypot, and attribution (listing, full search state, UTM, referrer). Leads write to `.data/leads.jsonl` for now.
+- Check-an-address tool: type an address, ZIP and price and get the DSCR with live HouseCanary rent. Needs no listing feed (`LOOKUP_RENT_PROVIDER=housecanary`).
 - Shareable search URLs, FAQ with structured data, robots.txt, sitemap, disclosures footer.
 - Griffin Track A styling. Checked in a browser at desktop and phone width with no console errors.
 - 20 automated tests (DSCR engine, search, lead validation).

@@ -16,9 +16,11 @@ export function ListingCard({
 }) {
   const { listing: l, rent, dscr, dscrLow, dscrHigh, need } = row;
   const t = tone(dscr);
+  const lookup = l.source === "lookup";
+  const place = [l.city, l.state].filter(Boolean).join(", ");
   return (
     <article className="card">
-      <div className="photo">
+      {!lookup && <div className="photo">
         {l.photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={l.photoUrl} alt={`${l.address}, ${l.city}`} />
@@ -28,11 +30,11 @@ export function ListingCard({
             <span>Photo not available</span>
           </>
         )}
-      </div>
+      </div>}
       <div className="body">
         <div className="price">{money(l.price)}</div>
         <div className="addr">
-          {l.address}, {l.city}, {l.state} {l.zip}
+          {l.address}{place ? `, ${place}` : ""} {l.zip}
         </div>
         <div className="ratio-row">
           <span className={`ratio ${t}`} aria-label={`DSCR ${ratio(dscr)}`}>
@@ -49,18 +51,22 @@ export function ListingCard({
           // (FSD 0.23 reads as 77%, FSD 0.17 as 83%). Inferred from sample reports, not from their docs.
           <div className="range">Rent estimate confidence {Math.round((1 - rent.fsd) * 100)}%.</div>
         )}
-        {l.propertyType === "2-4 Unit" && (
+        {l.propertyType === "2-4 Unit" && !lookup && (
           <div className="range">
             Multi-unit property: this rent estimate may cover only one unit. A loan officer will confirm total rent.
           </div>
         )}
         <div className="facts">
-          <span>Est. rent {money(rent.monthlyRent)}/mo</span>
-          <span>{l.beds} bd</span>
-          <span>{l.baths} ba</span>
-          <span>{l.sqft.toLocaleString()} sqft</span>
-          <span>{l.propertyType}</span>
-          <span>{l.daysOnMarket} days listed</span>
+          <span>Est. rent {money(rent.monthlyRent)}/mo{rent.source === "fixture" ? " (sample)" : ""}</span>
+          {!lookup && (
+            <>
+              <span>{l.beds} bd</span>
+              <span>{l.baths} ba</span>
+              <span>{l.sqft.toLocaleString()} sqft</span>
+              <span>{l.propertyType}</span>
+              <span>{l.daysOnMarket} days listed</span>
+            </>
+          )}
         </div>
         <div className="need">
           {need.reachable

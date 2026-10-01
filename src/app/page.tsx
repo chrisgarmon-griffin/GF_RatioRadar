@@ -1,5 +1,6 @@
 import { Mark } from "@/components/Mark";
 import { Search } from "@/components/Search";
+import { AddressLookup } from "@/components/AddressLookup";
 import { FAQ } from "@/lib/faq";
 import { DEMO } from "@/lib/config";
 
@@ -27,6 +28,7 @@ export default function Home() {
             <span>Ratio Radar</span>
           </a>
           <nav className="navlinks sc" aria-label="Primary">
+            <a className="hide-sm" href="#lookup">check an address</a>
             <a className="hide-sm" href="#how">how it works</a>
             <a className="hide-sm" href="#faq">faq</a>
             <a href="#search">search</a>
@@ -56,6 +58,7 @@ export default function Home() {
         </section>
 
         <Search />
+        <AddressLookup />
 
         <section className="section" id="how">
           <div className="wrap">

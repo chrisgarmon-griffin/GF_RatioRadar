@@ -22,8 +22,13 @@ export const listings = (): ListingProvider => {
   throw new Error(`listings provider "${p}" is not implemented yet`);
 };
 
-export const rents = (): RentProvider => {
-  const p = process.env.RENT_PROVIDER;
+/**
+ * scope "lookup" (the check-an-address tool) can use live rent while search still runs on sample listings:
+ * LOOKUP_RENT_PROVIDER overrides RENT_PROVIDER there. Sample listings have fictional addresses, and a live
+ * rent provider would drop every one of them.
+ */
+export const rents = (scope: "search" | "lookup" = "search"): RentProvider => {
+  const p = (scope === "lookup" && process.env.LOOKUP_RENT_PROVIDER) || process.env.RENT_PROVIDER;
   if (!p || p === "fixture") return fixtureRent;
   if (p === "housecanary") {
     return (rentSingleton ??= createHouseCanaryRent({
