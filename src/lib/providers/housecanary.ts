@@ -4,8 +4,8 @@ import { ProviderError, type Listing, type RentEstimate, type RentProvider } fro
 /**
  * HouseCanary rental AVM adapter.
  *
- * Contract used (HouseCanary Analytics API docs, GET /v2/property/rental_value; request side confirmed from the
- * docs page on 2026-10-01, response fields from search snippets and still to be confirmed against a live call):
+ * Contract used (HouseCanary Analytics API docs, GET /v2/property/rental_value; request and response shape confirmed
+ * against the docs page and its 200 sample on 2026-10-01; not yet run against a live account):
  *   GET https://api.housecanary.com/v2/property/rental_value?address=<number street>&city=&state=&zipcode=
  *   (the docs say a non-slug request must carry the other identifiers, so we send city, state and zip too)
  *   HTTP Basic auth: API key as user, API secret as password.
@@ -20,6 +20,7 @@ import { ProviderError, type Listing, type RentEstimate, type RentProvider } fro
 const BASE = "https://api.housecanary.com/v2";
 
 interface RentalValueBody {
+  address_info?: { status?: { match?: boolean } };
   "property/rental_value"?: {
     api_code?: number;
     api_code_description?: string;
@@ -32,6 +33,10 @@ export function parseRentalValue(body: unknown): RentEstimate {
   const first = (Array.isArray(body) ? body[0] : body) as RentalValueBody | null | undefined;
   const node = first?.["property/rental_value"];
   if (!node) throw new ProviderError("housecanary", "unexpected response shape");
+  // address_info.status.match is false when HouseCanary could not verify the address. Do not price a guess.
+  if (first?.address_info?.status?.match === false) {
+    throw new ProviderError("housecanary", "no rent estimate (address not matched)");
+  }
   if (node.api_code !== 0 || !node.result) {
     throw new ProviderError("housecanary", `no rent estimate (${node.api_code_description ?? `code ${node.api_code}`})`);
   }

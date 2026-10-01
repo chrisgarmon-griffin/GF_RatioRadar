@@ -25,6 +25,10 @@ describe("HouseCanary adapter", () => {
     expect(parseRentalValue(body)).toMatchObject({ monthlyRent: 2450, low: 2254, high: 2646 });
     expect(() => parseRentalValue([])).toThrow(/unexpected response/);
   });
+  it("treats an unmatched address as no estimate", () => {
+    const body = [{ ...hcBody({ price_mean: 1800 }), address_info: { status: { match: false } } }];
+    expect(() => parseRentalValue(body)).toThrow(/no rent estimate/);
+  });
   it("rejects a non-zero api_code and odd shapes", () => {
     expect(() => parseRentalValue(hcBody({}, 3))).toThrow(/no rent estimate/);
     expect(() => parseRentalValue({})).toThrow(/unexpected response/);
