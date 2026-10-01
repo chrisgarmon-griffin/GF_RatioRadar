@@ -156,6 +156,14 @@ export function Search() {
           )}
         </div>
 
+        {data && !error && data.rows.some((r) => r.rent.source === "HouseCanary") && (
+          // HouseCanary requires a visible link wherever its data is shown publicly. Swap in the official
+          // attribution snippet from the account's API Keys page (it carries an account-specific beacon).
+          <p className="meta">
+            Rent estimates from{" "}
+            <a href="https://www.housecanary.com" target="_blank" rel="noreferrer noopener">HouseCanary</a>.
+          </p>
+        )}
         {error && <div className="state-box" role="alert">{error}</div>}
         {loading && !data && <div className="grid"><div className="skeleton" /><div className="skeleton" /><div className="skeleton" /></div>}
         {data && !error && (
