@@ -143,6 +143,31 @@ Definitions are the existing `dscr.ts` behavior. These are modeling conventions,
 
 **LO handoff contents.** Scenario ID; calculation version (git SHA + engine version); timestamp; property label and state; price, down payment, loan amount, LTV; rent and range with source tags; hypothetical rate and structure; tax/insurance/HOA with source tags; DSCR and paths to 1.0; unresolved inputs; investor name, email, phone and consent record; chosen specialist; next information the LO needs (lease or 1007 rent, actual tax bill, insurance quote, HOA dues, reserves, credit). Ordered for Place → Document → Price. The handoff does not claim any stage is complete.
 
+### 8a. Worked example, end to end (target behavior)
+
+PROPOSED behavior once built. Numbers are fixture F1.
+
+1. **Investor asks:** "I'm looking at a $400K rental in California that should rent for $2,600. Does it work as a DSCR loan?"
+2. **Model collects gaps:** down payment, rate to model, HOA. It never guesses rent or invents a rate. A skipped HOA is flagged unknown.
+3. **`analyze_dscr` returns:** P&I $2,346 (7.99% hypothetical, 20% down, 30-yr) · tax $233 (CA state estimate 0.70%) · insurance $100 (0.30% illustration) · HOA unknown, modeled $0 · PITIA $2,679 · **DSCR 0.97, below 1.0**.
+4. **`paths_to_one` returns:** 22.7% down; or a 7.63% target rate (math target, not a quote); or interest-only (1.06); or 40-year (1.02).
+5. **`sensitivity`** answers "what if rent is $2,400" or "30% down" from the same engine.
+6. **`export_handoff`**, after consent: name, email, phone, optional specialist pick → Griffin lead capture with a scenario ID.
+7. **LO receives** the handoff in §8 and starts the first call at Document, not at re-collection. That is the handling-time claim the pilot must prove.
+
+```
+Investor in ChatGPT
+  → tool call: analyze_dscr | paths_to_one | sensitivity | export_handoff
+  → Ratio Radar API on Vercel (/api/plugin/[tool])
+  → src/lib/dscr.ts (same engine as the website)
+  → structured result + provenance + calculation version
+  → model explains in plain language
+  → export_handoff → lead capture, tagged with scenario ID
+  → (blocked) CRM/LOS join → application → funded loan
+```
+
+Works in demo mode once stage 2 ships. Real leads need §12 blockers 1–2. Funded-loan credit needs the scenario ID field in the CRM/LOS (§10).
+
 ## 9. Architecture, data, policy boundaries
 
 - Validated inputs → `dscr.ts` → structured result with provenance → tool response / export. The model explains; it never computes or edits numbers.
