@@ -1,10 +1,10 @@
-# Ratio Radar: Scoping
+# Revestor: Scoping
 
 Version 2, 2026-09-30. Supersedes the first scoping draft. Data source detail lives in [DATA_SOURCE_AUDIT.md](DATA_SOURCE_AUDIT.md).
 
 ## 1. What we are building
 
-Ratio Radar is a DSCR-first investment property search for Griffin Funding. It is the next version of Revestor (revestor.com), whose assets Griffin acquired in December 2025. Revestor.com now forwards to Griffin's DSCR page.
+Revestor is a DSCR-first investment property search for Griffin Funding. It relaunches the original Revestor (revestor.com), whose assets Griffin acquired in December 2025. Revestor.com now forwards to Griffin's DSCR page.
 
 An investor searches homes for sale, sees one DSCR ratio per property, changes loan options to reach 1.0, and moves straight into a Griffin pre-qualification. Search, qualify and close in one place.
 
@@ -13,7 +13,7 @@ An investor searches homes for sale, sees one DSCR ratio per property, changes l
 - SEO. A DSCR search experience can win rankings for DSCR terms. The Revestor domain already draws thousands of visits a year with no upkeep.
 - Press. A DSCR search tool from a DSCR lender is a story.
 
-**What Revestor did before, and what we drop.** The old Revestor showed cap rate, cash flow and NOI. Ratio Radar does not. No expense modeling. One number: DSCR.
+**What Revestor did before, and what we drop.** The old Revestor showed cap rate, cash flow and NOI. The relaunch does not. No expense modeling. One number: DSCR.
 
 ## 2. Locked decisions (2026-09-29 meeting with Bill)
 

@@ -1,10 +1,10 @@
-# Option B: Ratio Radar Chrome extension
+# Option B: Revestor Chrome extension
 
 Status: exploration, 2026-09-30. Nothing built. Claims marked [VERIFY] need a primary source or counsel before we act on them.
 
 ## Idea
 
-If licensed MLS feeds stall, skip the feed. Let investors browse Zillow, Redfin and similar sites as they already do, and add a Ratio Radar overlay on each listing page: DSCR at 20% down, the interest-only, 40-year and higher-down toggles, and a "Check my loan options" button into Griffin.
+If licensed MLS feeds stall, skip the feed. Let investors browse Zillow, Redfin and similar sites as they already do, and add a Revestor overlay on each listing page: DSCR at 20% down, the interest-only, 40-year and higher-down toggles, and a "Check my loan options" button into Griffin.
 
 The listing data stays on the portal. We add the DSCR layer and the financing path.
 
@@ -20,7 +20,7 @@ Two conclusions. The approach is technically proven and the Chrome Web Store acc
 ## How it would work
 
 1. A content script runs on listing pages (`zillow.com/homedetails/*`, `redfin.com/*/home/*`). It reads the address and list price from the page the user is already viewing.
-2. It sends only address, ZIP, price and the selected toggles to a Ratio Radar endpoint. No page HTML, no other page data.
+2. It sends only address, ZIP, price and the selected toggles to a Revestor endpoint. No page HTML, no other page data.
 3. The endpoint reuses what is built: HouseCanary rent, BankingBridge rate, the DSCR engine. It returns the ratio, the rent range and the down payment needed to reach 1.0.
 4. The extension draws a badge on the page. Toggles re-query. "Check my loan options" opens a Griffin form carrying the address, price and search state.
 

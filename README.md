@@ -1,4 +1,4 @@
-# Ratio Radar
+# Revestor
 
 DSCR-first property search for Griffin Funding: search inventory, see an instant DSCR, route into a Griffin pre-qual.
 Scope and locked decisions: [docs/SCOPING.md](docs/SCOPING.md). Source audit: [docs/DATA_SOURCE_AUDIT.md](docs/DATA_SOURCE_AUDIT.md).
@@ -29,7 +29,7 @@ npm run typecheck
 
 ## Product identity
 
-Ratio Radar is the next version of Revestor (revestor.com), acquired by Griffin in December 2025. Scope: [docs/SCOPING.md](docs/SCOPING.md).
+Revestor (revestor.com) is the relaunch of the original Revestor, acquired by Griffin in December 2025. Scope: [docs/SCOPING.md](docs/SCOPING.md).
 
 ## Deployment
 

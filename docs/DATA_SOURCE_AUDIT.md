@@ -76,7 +76,7 @@ The three paths from the scoping doc, filled with what is known.
 
 ## 4. Where free and public data does help
 
-| Use | Source | Effect on Ratio Radar |
+| Use | Source | Effect on Revestor |
 |---|---|---|
 | Replace the 1.10% tax placeholder | ACS median real estate taxes by county, later ATTOM/Regrid parcel tax | Removes the least defensible number in the DSCR math. Lenders often estimate taxes on purchase price, so confirm with the Griffin underwriting rule before changing the method |
 | Rent confidence | HUD SAFMR and ACS gross rent against the HouseCanary estimate | Flag listings where HouseCanary rent sits far above local benchmarks |
