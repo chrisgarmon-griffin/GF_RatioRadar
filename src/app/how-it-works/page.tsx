@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHero } from "@/components/resources/PageHero";
 import { Workflow } from "@/components/resources/Workflow";
-export const metadata = { title: "How It Works | Griffin Funding RatioRadar" };
+export const metadata = { title: "How It Works | Revestor - Powered by Griffin Funding" };
 export default function Page() {
   return (
     <main className="wrap resource-page">

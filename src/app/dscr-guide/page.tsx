@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHero } from "@/components/resources/PageHero";
 import { RatioLab } from "@/components/resources/RatioLab";
-export const metadata = { title: "DSCR Guide | Griffin Funding RatioRadar" };
+export const metadata = { title: "DSCR Guide | Revestor - Powered by Griffin Funding" };
 const topics = [
   [
     "Rental-income DSCR",

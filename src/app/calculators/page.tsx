@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHero } from "@/components/resources/PageHero";
 export const metadata = {
-  title: "Investment Property Calculators | Griffin Funding RatioRadar",
+  title: "Investment Property Calculators | Revestor - Powered by Griffin Funding",
 };
 export default function Page() {
   return (
