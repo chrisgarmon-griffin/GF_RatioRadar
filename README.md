@@ -15,7 +15,7 @@ npm run typecheck
 ## What exists
 
 - `src/lib/dscr.ts`: pure DSCR math. Ratio, interest-only, 40-year, and closed-form required down payment to hit 1.0.
-- `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture (sample) implementations by default. `RENT_PROVIDER=housecanary` uses the HouseCanary rental AVM (range, 24-hour cache, concurrency-limited). `RATE_PROVIDER=bankingbridge` uses a BankingBridge adapter whose request and response shapes are assumed until we have their docs. Live providers never fall back to fixtures. No listing adapter yet.
+- `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture (sample) implementations by default. `RENT_PROVIDER=housecanary` uses the HouseCanary rental AVM (range, 24-hour cache, concurrency-limited). `RENT_PROVIDER=rentcast` uses the RentCast rent AVM (range, 24-hour cache, single-family, condo and townhome only). `RATE_PROVIDER=bankingbridge` uses a BankingBridge adapter whose request and response shapes are assumed until we have their docs. Live providers never fall back to fixtures. No listing adapter yet.
 - `src/lib/search.ts` and `POST /api/search`: forward mode (ratio per listing) and inverse mode (listings that reach 1.0 within the down payment the buyer will bring, sorted by lowest down).
 - `src/app/page.tsx` and `src/components/`: landing page, search, listing cards, lead dialog.
 - `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Writes `.data/leads.jsonl` until a CRM handoff exists.

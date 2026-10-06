@@ -106,3 +106,44 @@ describe("TtlCache", () => {
     expect(load).toHaveBeenCalledTimes(2);
   });
 });
+
+import { createRentCastRent, parseRentAvm } from "./rentcast";
+
+describe("RentCast adapter", () => {
+  const body = { rent: 1620, rentRangeLow: 1550, rentRangeHigh: 1690, subjectProperty: {}, comparables: [] };
+  it("parses rent and range, with no fsd", () => {
+    expect(parseRentAvm(body)).toEqual({ monthlyRent: 1620, low: 1550, high: 1690, source: "RentCast" });
+  });
+  it("rejects odd shapes and zero rent", () => {
+    expect(() => parseRentAvm({})).toThrow(/unexpected response/);
+    expect(() => parseRentAvm(null)).toThrow(/unexpected response/);
+    expect(() => parseRentAvm({ rent: 0 })).toThrow(/no rent estimate/);
+  });
+  it("sends the key header, a full address and the property facts, and caches", async () => {
+    const fetchImpl = vi.fn(async () => ok(body));
+    const p = createRentCastRent({ apiKey: "k", fetchImpl });
+    await p.estimate(listing);
+    await p.estimate(listing);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchImpl.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toContain("/v1/avm/rent/long-term?");
+    expect(decodeURIComponent(url.replace(/\+/g, " "))).toContain("address=1204 Alder St, Fresno, CA, 93706");
+    expect(url).toContain("propertyType=Single+Family");
+    expect(url).toContain("bedrooms=3");
+    expect(url).toContain("bathrooms=2");
+    expect(url).toContain("squareFootage=1420");
+    expect((init.headers as Record<string, string>)["x-api-key"]).toBe("k");
+  });
+  it("refuses 2-4 unit properties without calling the API", async () => {
+    const fetchImpl = vi.fn(async () => ok(body));
+    const p = createRentCastRent({ apiKey: "k", fetchImpl });
+    await expect(p.estimate({ ...listing, propertyType: "2-4 Unit" })).rejects.toThrow(/per unit/);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+  it("maps HTTP errors and does not cache failures", async () => {
+    const fetchImpl = vi.fn().mockResolvedValueOnce(new Response("{}", { status: 403 })).mockResolvedValueOnce(ok(body));
+    const p = createRentCastRent({ apiKey: "k", fetchImpl });
+    await expect(p.estimate(listing)).rejects.toMatchObject({ status: 403 });
+    await expect(p.estimate(listing)).resolves.toMatchObject({ monthlyRent: 1620 });
+  });
+});

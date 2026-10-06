@@ -1,6 +1,7 @@
 import { createBankingBridgeRate } from "./bankingbridge";
 import { fixtureListings, fixtureRate, fixtureRent } from "./fixtures";
 import { createHouseCanaryRent } from "./housecanary";
+import { createRentCastRent } from "./rentcast";
 import type { ListingProvider, RateProvider, RentProvider } from "./types";
 
 /**
@@ -14,6 +15,7 @@ function need(name: string): string {
 }
 
 let rentSingleton: RentProvider | undefined;
+let rentcastSingleton: RentProvider | undefined;
 let rateSingleton: RateProvider | undefined;
 
 export const listings = (): ListingProvider => {
@@ -35,6 +37,9 @@ export const rents = (scope: "search" | "lookup" = "search"): RentProvider => {
       key: need("HOUSECANARY_API_KEY"),
       secret: need("HOUSECANARY_API_SECRET"),
     }));
+  }
+  if (p === "rentcast") {
+    return (rentcastSingleton ??= createRentCastRent({ apiKey: need("RENTCAST_API_KEY") }));
   }
   throw new Error(`rent provider "${p}" is not implemented`);
 };
