@@ -1,7 +1,7 @@
 export const FAQ = [
   {
     q: "What does the DSCR actually measure?",
-    a: "The debt service coverage ratio compares monthly rent with the modeled monthly housing payment. Ratio Radar uses principal, interest, state-based estimated property taxes, insurance and supplied HOA dues. Unknown HOA is modeled at $0 and flagged for verification. It is a comparison tool, not a complete view of ownership costs.",
+    a: "The debt service coverage ratio compares monthly rent with the modeled monthly housing payment. Revestor uses principal, interest, state-based estimated property taxes, insurance and supplied HOA dues. Unknown HOA is modeled at $0 and flagged for verification. It is a comparison tool, not a complete view of ownership costs.",
   },
   {
     q: "Why is 1.0 the benchmark?",
