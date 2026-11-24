@@ -18,6 +18,7 @@ npm run typecheck
 - `src/lib/providers/`: Listings, Rent, Rate interfaces. Fixture (sample) implementations by default. `RENT_PROVIDER=housecanary` uses the HouseCanary rental AVM (range, 24-hour cache, concurrency-limited). `RENT_PROVIDER=rentcast` uses the RentCast rent AVM (range, 24-hour cache, single-family, condo and townhome only). `RATE_PROVIDER=bankingbridge` uses a BankingBridge adapter whose request and response shapes are assumed until we have their docs. Live providers never fall back to fixtures. No listing adapter yet.
 - `src/lib/search.ts` and `POST /api/search`: forward mode (ratio per listing) and inverse mode (listings that reach 1.0 within the down payment the buyer will bring, sorted by lowest down).
 - `src/app/page.tsx` and `src/components/`: landing page, search, listing cards, lead dialog.
+- `public/revestor-widget.js`, `POST /api/widget`, `src/lib/widget.ts` and `/widget-demo`: private demo of an embeddable DSCR widget for a broker's own listing page. It uses the listing's real tax and HOA when the page supplies them. Sample rent and rate, same-origin only, fictional brokerage. Not reviewed for RESPA or MLS display rules, so do not give it to a broker.
 - `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Writes `.data/leads.jsonl` until a CRM handoff exists.
 
 ## Assumptions to confirm
