@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { BUYBOX_BEDS, DEMO_ZIPS, maxPriceForDscr, zipRents } from "@/lib/buybox";
 import { PARTNER_LISTINGS, type PartnerListing } from "@/lib/partner-listings";
+import { rates } from "@/lib/providers";
 import { quoteWidget, type WidgetQuote, type WidgetTerm } from "@/lib/widget";
 
 export const metadata: Metadata = {
@@ -61,6 +63,30 @@ const CSS = `
 .pl .credit b{color:var(--ink);font-weight:600}
 .pl .cta{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:14px;background:var(--blue);color:#fff!important;font-weight:600;transition:background .2s}
 .pl .cta:hover{background:#03113b}.pl .cta em{font-style:normal;color:var(--lime)}
+.pl .search{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;margin-bottom:24px;box-shadow:0 1px 2px #10213a0a,0 12px 32px #10213a0a}
+.pl .search label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
+.pl .search .field{display:flex;gap:8px}
+.pl .search input[type=text],.pl .search input:not([type]){flex:1;min-width:0;min-height:48px;padding:0 16px;border:1px solid #c3cfdc;border-radius:14px;font:500 17px/1 var(--mono);color:var(--ink);background:#fff}
+.pl .search button{min-height:48px;padding:0 22px;border:0;border-radius:14px;background:var(--blue);color:#fff;font:600 15px/1 inherit;font-family:inherit;cursor:pointer;white-space:nowrap}
+.pl .search button:hover{background:#03113b}.pl .search button em{font-style:normal;color:var(--lime)}
+.pl .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 0;font-size:12px;color:var(--muted)}
+.pl .chips a{padding:4px 10px;border:1px solid var(--line);border-radius:99px;background:var(--paper);font-weight:600;color:var(--ink)}
+.pl .chips a:hover{border-color:var(--blue)}.pl .chips a[aria-current=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.pl .pstep{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}.pl .pstep b{color:var(--blue);margin-right:8px}
+.pl .box{background:var(--blue);color:#fff;border-radius:24px;padding:28px;margin-bottom:8px}
+.pl .box .pstep{color:#ffffffa6}.pl .box .pstep b{color:var(--lime)}
+.pl .box h2{font:500 clamp(22px,3vw,32px)/1.15 var(--serif);letter-spacing:-.03em;margin:0}
+.pl .boxlede{color:#ffffffbf;margin:8px 0 18px;max-width:620px}
+.pl .scroll{overflow-x:auto;margin:0 -4px}
+.pl .box table{width:100%;border-collapse:separate;border-spacing:4px 0;min-width:560px}
+.pl .box th,.pl .box td{padding:11px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid #ffffff1f}
+.pl .box tbody tr:last-child th,.pl .box tbody tr:last-child td{border-bottom:0}
+.pl .box th:first-child{text-align:left}.pl .box thead th{font:500 10.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#ffffffa6}
+.pl .box tbody th{font-weight:600}.pl .box td{font:500 14px/1.3 var(--mono)}
+.pl .box .on{background:#ffffff14;color:#fff}.pl .box thead .on{color:var(--lime);border-radius:12px 12px 0 0}.pl .box tbody tr:last-child .on{border-radius:0 0 12px 12px}
+.pl .box td.on{font-size:15px}
+.pl .boxfine{font-size:11px;color:#ffffff99;margin:16px 0 0;max-width:760px}
+.pl [hidden]{display:none!important}
 .pl .empty{background:#fff;border:1px dashed var(--line);border-radius:24px;padding:40px;text-align:center;color:var(--muted)}
 .pl .how{margin-top:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:20px}
 .pl .how div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px}
@@ -77,7 +103,7 @@ const money = (n: number) => (n < 0 ? "-$" : "$") + Math.abs(Math.round(n)).toLo
 const fx = (d: number) => (d < 1 ? Math.floor(d * 100 + 1e-9) / 100 : d).toFixed(2);
 const pct = (n: number) => `${Math.round(n * 1000) / 10}%`;
 
-type Params = { down?: string; term?: string; state?: string; fit?: string };
+type Params = { down?: string; term?: string; state?: string; fit?: string; zip?: string };
 
 export default async function PartnerListings({ searchParams }: { searchParams: Promise<Params> }) {
   const sp = await searchParams;
@@ -85,9 +111,25 @@ export default async function PartnerListings({ searchParams }: { searchParams: 
   const term: WidgetTerm = sp.term === "40" || sp.term === "io" ? sp.term : "30";
   const state = STATES.includes(sp.state ?? "") ? sp.state! : "All";
   const fitOnly = sp.fit === "1";
+  const zip = /^\d{5}$/.test(sp.zip ?? "") ? sp.zip! : "";
+  const market = zip ? zipRents(zip) : undefined;
+  const flags = { interestOnly: term === "io", fortyYear: term === "40" };
+  // Buy box: the price ceiling that reaches 1.0 in this ZIP, by bedrooms and down payment, on the chosen loan type.
+  const box = market
+    ? await Promise.all(
+        DOWNS.map(async (d) => {
+          const rate = (await rates().quote({ ...flags, downPct: d / 100 })).rate;
+          return {
+            down: d,
+            rate,
+            ceilings: BUYBOX_BEDS.map((b) => maxPriceForDscr({ monthlyRent: market.rents[b], annualRate: rate, downPct: d / 100, ...flags })),
+          };
+        }),
+      )
+    : null;
 
   const quoted: { l: PartnerListing; q: WidgetQuote }[] = await Promise.all(
-    PARTNER_LISTINGS.filter((l) => state === "All" || l.state === state).map(async (l) => ({
+    PARTNER_LISTINGS.filter((l) => (zip ? l.zip === zip : state === "All" || l.state === state)).map(async (l) => ({
       l,
       q: await quoteWidget({ ...l, downPct: down / 100, interestOnly: term === "io", fortyYear: term === "40" }),
     })),
@@ -97,7 +139,7 @@ export default async function PartnerListings({ searchParams }: { searchParams: 
   const brokers = new Set(quoted.map((x) => x.l.brokerage)).size;
 
   const href = (patch: Params) => {
-    const next = { down: String(down), term, state, fit: fitOnly ? "1" : "", ...patch };
+    const next = { zip, down: String(down), term, state, fit: fitOnly ? "1" : "", ...patch };
     const qs = new URLSearchParams(Object.entries(next).filter(([, v]) => v && v !== "All") as [string, string][]);
     return `/partner-listings?${qs}`;
   };
@@ -111,13 +153,36 @@ export default async function PartnerListings({ searchParams }: { searchParams: 
       </div>
       <div className="wrap">
         <p className="eyebrow">
-          Revestor · Partner listings ·{" "}
+          Revestor · DSCR search ·{" "}
           <a href="/widget-demo" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>See the broker-site widget</a>
         </p>
-        <h1>Investment listings from partner brokers, ranked by DSCR.</h1>
+        <h1>Find investment properties that reach DSCR 1.0.</h1>
         <p className="lede">
-          Each broker sends only the listings their own brokerage represents. Every one is credited to the listing agent and links back to the broker&apos;s page.
+          Search a ZIP code to see the price that works there, then the listings partner brokers have sent us. Every listing is credited and links back to the broker.
         </p>
+
+        <form className="search" action="/partner-listings" method="get" role="search">
+          <label htmlFor="zip">ZIP code</label>
+          <div className="field">
+            <input id="zip" name="zip" inputMode="numeric" pattern="[0-9]{5}" maxLength={5} placeholder="e.g. 93706" defaultValue={zip || sp.zip || ""} autoComplete="postal-code" />
+            <input type="hidden" name="down" value={down} />
+            <input type="hidden" name="term" value={term} />
+            <button type="submit">Search <em>→</em></button>
+          </div>
+          <p className="chips">
+            <span>Demo ZIPs:</span>
+            {DEMO_ZIPS.map((z) => (
+              <a key={z.zip} href={href({ zip: z.zip, state: "All", fit: "" })} aria-current={z.zip === zip}>{z.zip} {z.city}</a>
+            ))}
+            {zip && <a href={href({ zip: "" })}>Clear</a>}
+          </p>
+        </form>
+
+        {sp.zip && !market && (
+          <div className="empty" role="status" style={{ marginBottom: 24 }}>
+            This demo only has sample data for the ZIP codes listed above. A live version would answer any ZIP.
+          </div>
+        )}
 
         <div className="controls">
           <div className="group">
@@ -132,7 +197,7 @@ export default async function PartnerListings({ searchParams }: { searchParams: 
               {TERMS.map((t) => <a key={t.id} href={href({ term: t.id })} aria-current={t.id === term}>{t.label}</a>)}
             </nav>
           </div>
-          <div className="group">
+          <div className="group" hidden={!!zip}>
             <span>State</span>
             <nav className="seg" aria-label="State">
               {STATES.map((s) => <a key={s} href={href({ state: s })} aria-current={s === state}>{s}</a>)}
@@ -147,8 +212,42 @@ export default async function PartnerListings({ searchParams }: { searchParams: 
           </div>
         </div>
 
+        {market && box && (
+          <section className="box" aria-labelledby="box-h">
+            <p className="pstep"><b>01</b> Market answer</p>
+            <h2 id="box-h">What reaches 1.0 in {zip}, {market.city}, {market.state}</h2>
+            <p className="boxlede">
+              Highest purchase price where typical rent still covers the payment, on a {TERMS.find((t) => t.id === term)!.label.toLowerCase()} loan.
+            </p>
+            <div className="scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Bedrooms</th>
+                    <th scope="col">Typical rent</th>
+                    {box.map((c) => <th scope="col" key={c.down} className={c.down === down ? "on" : ""}>{c.down}% down</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {BUYBOX_BEDS.map((b, i) => (
+                    <tr key={b}>
+                      <th scope="row">{b} bed</th>
+                      <td>{money(market.rents[b])}/mo</td>
+                      {box.map((c) => <td key={c.down} className={c.down === down ? "on" : ""}>up to {money(Math.floor(c.ceilings[i] / 1000) * 1000)}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="boxfine">
+              Market estimate, not a property quote. Sample rents and a sample rate of {(box.find((c) => c.down === down)!.rate * 100).toFixed(3)}%. Taxes and insurance are estimated from price, and HOA dues are not included.
+            </p>
+          </section>
+        )}
+
+        {zip && market && <p className="pstep" style={{ marginTop: 32 }}><b>02</b> Partner listings in {zip}</p>}
         <dl className="summary">
-          <div><dt>Partner listings</dt><dd>{quoted.length}</dd></div>
+          <div><dt>Partner listings{zip ? ` in ${zip}` : ""}</dt><dd>{quoted.length}</dd></div>
           <div><dt>Reach 1.0 at {down}% down</dt><dd>{reach}</dd></div>
           <div><dt>Partner brokers</dt><dd>{brokers}</dd></div>
         </dl>
@@ -194,6 +293,15 @@ export default async function PartnerListings({ searchParams }: { searchParams: 
               );
             })}
           </div>
+        )}
+
+        {zip && market && (
+          <>
+            <p className="pstep" style={{ marginTop: 32 }}><b>03</b> Licensed feed listings</p>
+            <div className="empty">
+              In a market with a licensed listing feed, every home for sale in {zip} would appear here with its DSCR and photos. No feed is connected in this demo.
+            </div>
+          </>
         )}
 
         <div className="how">
