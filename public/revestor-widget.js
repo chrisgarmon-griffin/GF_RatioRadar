@@ -14,6 +14,8 @@
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var money = function (n) { return (n < 0 ? "-$" : "$") + Math.abs(Math.round(n)).toLocaleString("en-US"); };
   var pct = function (n) { var v = n * 100; return (Math.abs(v - Math.round(v)) < 0.05 ? Math.round(v) : v.toFixed(1)) + "%"; };
+  // Round down below 1.0 so a ratio that misses the mark never displays as 1.00.
+  var fx = function (d) { return (d < 1 ? Math.floor(d * 100 + 1e-9) / 100 : d).toFixed(2); };
   var MIN = 0.5, MAX = 1.5, ARC = Math.PI * 80;
   var pos = function (d) { return Math.min(1, Math.max(0, (d - MIN) / (MAX - MIN))); };
 
@@ -210,11 +212,11 @@
     function tween(to) {
       cancelAnimationFrame(st.raf);
       var from = st.shown == null ? to : st.shown, t0 = performance.now();
-      if (reduce || from === to) { st.shown = to; num.textContent = to.toFixed(2); return; }
+      if (reduce || from === to) { st.shown = to; num.textContent = fx(to); return; }
       (function step(now) {
         var k = Math.min(1, (now - t0) / 550), e = 1 - Math.pow(1 - k, 3);
         st.shown = from + (to - from) * e;
-        num.textContent = st.shown.toFixed(2);
+        num.textContent = fx(st.shown);
         if (k < 1) st.raf = requestAnimationFrame(step);
       })(t0);
     }
@@ -227,7 +229,7 @@
       if (q.dscrLow && q.dscrHigh) {
         var a = pos(q.dscrLow) * ARC, b = pos(q.dscrHigh) * ARC;
         band.setAttribute("stroke-dasharray", "0 " + a + " " + Math.max(0, b - a) + " " + ARC);
-        g.setAttribute("aria-label", "DSCR " + q.dscr.toFixed(2) + ", range " + q.dscrLow.toFixed(2) + " to " + q.dscrHigh.toFixed(2));
+        g.setAttribute("aria-label", "DSCR " + fx(q.dscr) + ", range " + fx(q.dscrLow) + " to " + fx(q.dscrHigh));
       }
       dot.className = "dot" + (good ? " good" : "");
       vMain.textContent = good
@@ -236,7 +238,7 @@
           ? "Reaches 1.0 at about " + pct(q.need.downPct) + " down."
           : "Does not reach 1.0 within 50% down on this loan type.";
       vSub.textContent = q.dscrLow && q.dscrHigh
-        ? "Likely range " + q.dscrLow.toFixed(2) + " to " + q.dscrHigh.toFixed(2) + ", based on the rent estimate range."
+        ? "Likely range " + fx(q.dscrLow) + " to " + fx(q.dscrHigh) + ", based on the rent estimate range."
         : "";
       var target = !good && q.need.reachable ? Math.ceil(q.need.downPct * 100) / 100 : null;
       reach.hidden = target == null;
@@ -244,7 +246,7 @@
         reach.textContent = "Set down payment to " + pct(target) + " to reach 1.0";
         reach.onclick = function () { st.downPct = target; setSlider(); load(); slider.focus(); };
       }
-      for (var t in segBtn) segBtn[t].v.textContent = q.byTerm[t].dscr.toFixed(2);
+      for (var t in segBtn) segBtn[t].v.textContent = fx(q.byTerm[t].dscr);
       sRent.textContent = money(q.monthlyRent);
       sPay.textContent = money(q.pitia);
       sFlow.textContent = (q.monthlyCashFlow >= 0 ? "+" : "") + money(q.monthlyCashFlow);
@@ -338,7 +340,7 @@
       var form = el("form", { noValidate: true }, [
         el("div", { className: "recap" }, [
           el("b", { textContent: [d.address, d.city].filter(Boolean).join(", ") || "This property" }),
-          el("span", { textContent: money(Number(d.price)) + " · " + pct(st.downPct) + " down · " + termName + " · DSCR " + q.dscr.toFixed(2) }),
+          el("span", { textContent: money(Number(d.price)) + " · " + pct(st.downPct) + " down · " + termName + " · DSCR " + fx(q.dscr) }),
         ]),
         name.wrap, email.wrap, phone.wrap, hp,
         el("label", { className: "consent", htmlFor: "rv-consent" }, [consent, el("span", { textContent:
@@ -359,7 +361,7 @@
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
             name: name.input.value, email: email.input.value, phone: phone.input.value, website: hp.value, consent: true,
-            listingSummary: [d.address, d.city, d.state, d.zip].filter(Boolean).join(", ") + " | " + money(Number(d.price)) + " | DSCR " + q.dscr.toFixed(2),
+            listingSummary: [d.address, d.city, d.state, d.zip].filter(Boolean).join(", ") + " | " + money(Number(d.price)) + " | DSCR " + fx(q.dscr),
             search: { source: "widget", host: location.hostname, downPct: st.downPct, term: st.term, rate: q.rate, monthlyRent: q.monthlyRent },
             referrer: location.href,
           }),
@@ -374,7 +376,7 @@
             doneView.replaceChildren(el("div", { className: "done", attrs: { role: "status" } }, [
               el("div", { className: "tick" }, [tickSvg]), h,
               el("p", { textContent: "A Griffin Funding loan officer will follow up about this property." }),
-              el("p", { textContent: "They will have your scenario: " + pct(st.downPct) + " down, " + termName + ", DSCR " + q.dscr.toFixed(2) + "." }),
+              el("p", { textContent: "They will have your scenario: " + pct(st.downPct) + " down, " + termName + ", DSCR " + fx(q.dscr) + "." }),
             ]), again);
             show(doneView);
             h.focus();

@@ -1,4 +1,5 @@
 import { computeDscr, DEFAULT_ASSUMPTIONS, requiredDownPayment, type Assumptions, type DownPaymentNeed } from "./dscr";
+import { sampleRentFor } from "./partner-listings";
 import { rates, rents } from "./providers";
 
 /**
@@ -106,13 +107,18 @@ export async function quoteWidget(i: WidgetInput): Promise<WidgetQuote> {
     io: { interestOnly: true, fortyYear: false },
   };
   const terms = Object.keys(flags) as WidgetTerm[];
-  const [rent, ...quotes] = await Promise.all([
+  const [providerRent, ...quotes] = await Promise.all([
     rents().estimate({
       id: "widget", address: i.address, city: i.city, state: i.state, zip: i.zip, price: i.price,
       beds: i.beds, baths: i.baths, sqft: i.sqft, propertyType: "SFR", daysOnMarket: 0, photoUrl: null, source: "widget",
     }),
     ...terms.map((t) => rates().quote({ ...flags[t], downPct: i.downPct, loanAmount })),
   ]);
+  // Demo only: while rent is sample data, known demo listings use their own sample rent so each one differs.
+  const sample = providerRent.source === "fixture" ? sampleRentFor(i.address, i.zip) : undefined;
+  const rent = sample
+    ? { ...providerRent, monthlyRent: sample, low: Math.round(sample * 0.92), high: Math.round(sample * 1.08) }
+    : providerRent;
   const taxAnnual = i.taxAnnual ?? i.price * DEFAULT_ASSUMPTIONS.taxRate;
   const hoa = i.hoaMonthly ?? 0;
   // HOA is a fixed monthly cost like tax, so fold it into the price-based rate the engine already handles.

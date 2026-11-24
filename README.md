@@ -19,6 +19,7 @@ npm run typecheck
 - `src/lib/search.ts` and `POST /api/search`: forward mode (ratio per listing) and inverse mode (listings that reach 1.0 within the down payment the buyer will bring, sorted by lowest down).
 - `src/app/page.tsx` and `src/components/`: landing page, search, listing cards, lead dialog.
 - `public/revestor-widget.js`, `POST /api/widget`, `src/lib/widget.ts` and `/widget-demo`: private demo of an embeddable DSCR widget for a broker's own listing page. It uses the listing's real tax and HOA when the page supplies them. Styled to the Revestor navy and lime branding on `main`, with a DSCR gauge, down payment slider, loan type comparison and lead form. Sample rent and rate, same-origin only, fictional brokerage. Not reviewed for RESPA or MLS display rules, so do not give it to a broker.
+- `/partner-listings` and `src/lib/partner-listings.ts`: private demo of listings that partner brokers would send to Revestor themselves (their own listings only, by written opt-in), ranked by DSCR, credited and linked back to the broker page. All data is fictional.
 - `src/lib/leads.ts` and `POST /api/leads`: lead capture with consent and attribution. Writes `.data/leads.jsonl` until a CRM handoff exists.
 
 ## Assumptions to confirm

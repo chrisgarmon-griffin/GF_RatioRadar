@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { PARTNER_LISTINGS, partnerListing } from "@/lib/partner-listings";
 
 export const metadata: Metadata = {
   title: "Revestor widget demo (private)",
@@ -10,21 +11,11 @@ export const metadata: Metadata = {
  * PRIVATE DEMO. A mock broker listing page showing how the Revestor widget would sit on a broker's own site.
  * The brokerage, agent and listings are fictional. No MLS data is used.
  */
-const LISTINGS = {
-  fresno: {
-    label: "Covers at 20% down",
-    address: "1204 Alder St", city: "Fresno", state: "CA", zip: "93706",
-    price: 349000, beds: 3, baths: 2, sqft: 1420, taxAnnual: 3640, hoaMonthly: 0,
-    blurb: "Single-story home near schools and transit. Updated kitchen, fenced yard and a two-car garage.",
-  },
-  sandiego: {
-    label: "Needs more down, has HOA",
-    address: "88 Marina Way #4", city: "San Diego", state: "CA", zip: "92109",
-    price: 685000, beds: 3, baths: 2.5, sqft: 1610, taxAnnual: 8220, hoaMonthly: 310,
-    blurb: "End-unit townhome a few blocks from the bay. Attached garage, private patio and community pool.",
-  },
-} as const;
-type Key = keyof typeof LISTINGS;
+const TABS = [
+  { id: "fresno", label: "Covers at 20% down" },
+  { id: "sandiego", label: "Needs more down, has HOA" },
+];
+
 
 const ink = "#10213a", muted = "#516175", line = "#dce4ed", blue = "#061b57", lime = "#a5cf00";
 const sans = "'Revestor Sans', system-ui, sans-serif";
@@ -33,8 +24,8 @@ const mono = "'Revestor Mono', ui-monospace, monospace";
 
 export default async function WidgetDemo({ searchParams }: { searchParams: Promise<{ listing?: string }> }) {
   const { listing: param } = await searchParams;
-  const key: Key = param === "sandiego" ? "sandiego" : "fresno";
-  const l = LISTINGS[key];
+  const l = partnerListing(param) ?? PARTNER_LISTINGS[0];
+  const key = l.id;
   const snippet = `<div data-revestor-widget
      data-address="${l.address}" data-city="${l.city}"
      data-state="${l.state}" data-zip="${l.zip}"
@@ -56,7 +47,8 @@ export default async function WidgetDemo({ searchParams }: { searchParams: Promi
 
       <div style={{ maxWidth: 1120, margin: "0 auto", padding: "40px 20px 64px" }}>
         <p style={{ font: `500 11px/1 ${mono}`, letterSpacing: ".1em", textTransform: "uppercase", color: muted, margin: "0 0 12px" }}>
-          Revestor for brokers
+          Revestor for brokers ·{" "}
+          <a href="/partner-listings" style={{ color: blue, textDecoration: "underline", textUnderlineOffset: 3 }}>See partner listings on Revestor</a>
         </p>
         <h1 style={{ font: `500 clamp(30px, 4vw, 46px)/1.1 ${serif}`, letterSpacing: "-.035em", margin: 0, maxWidth: 760 }}>
           The DSCR answer, on the listing page your buyers are already on.
@@ -66,14 +58,14 @@ export default async function WidgetDemo({ searchParams }: { searchParams: Promi
         </p>
 
         <nav aria-label="Sample listing" style={{ display: "inline-flex", gap: 4, padding: 4, background: "#fff", border: `1px solid ${line}`, borderRadius: 16, marginBottom: 20 }}>
-          {(Object.keys(LISTINGS) as Key[]).map((k) => (
+          {TABS.map(({ id: k, label }) => (
             <a
               key={k}
               href={`/widget-demo?listing=${k}`}
               aria-current={k === key ? "page" : undefined}
               style={{ padding: "8px 14px", borderRadius: 12, fontSize: 13, fontWeight: 600, textDecoration: "none", background: k === key ? blue : "transparent", color: k === key ? "#fff" : muted }}
             >
-              {LISTINGS[k].label}
+              {label}
             </a>
           ))}
         </nav>
@@ -83,11 +75,11 @@ export default async function WidgetDemo({ searchParams }: { searchParams: Promi
           <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 16px", borderBottom: `1px solid ${line}`, background: "#f9fbfd" }}>
             {[0, 1, 2].map((i) => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: line, flex: "none" }} />)}
             <span style={{ marginLeft: 12, font: `500 11px/1 ${mono}`, color: muted, background: "#fff", border: `1px solid ${line}`, borderRadius: 99, padding: "6px 14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
-              samplecoastrealty.example/listings/{l.address.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
+              {l.brokerage.toLowerCase().replace(/[^a-z]+/g, "")}.example/listings/{l.address.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
             </span>
           </div>
           <div style={{ padding: "14px 24px", borderBottom: `1px solid ${line}`, display: "flex", justifyContent: "space-between", alignItems: "baseline", fontFamily: "Georgia, serif" }}>
-            <span style={{ fontSize: 19, color: "#27364a" }}>Sample Coast Realty</span>
+            <span style={{ fontSize: 19, color: "#27364a" }}>{l.brokerage}</span>
             <span style={{ fontSize: 12, color: muted, fontFamily: sans }}>fictional brokerage</span>
           </div>
           <div style={{ padding: 24, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 32, alignItems: "start" }}>
@@ -103,7 +95,7 @@ export default async function WidgetDemo({ searchParams }: { searchParams: Promi
               </p>
               <p style={{ fontSize: 15, lineHeight: 1.6, margin: "0 0 12px" }}>{l.blurb} Sample description for the demo.</p>
               <p style={{ font: `12px ${sans}`, color: muted, margin: 0 }}>
-                Listed by Jordan Sample, Sample Coast Realty. Listing attribution and MLS disclaimers would appear here on a real broker site.
+                Listed by {l.agent}, {l.brokerage}. Listing attribution and MLS disclaimers would appear here on a real broker site.
               </p>
             </section>
             <aside style={{ minWidth: 0 }}>
