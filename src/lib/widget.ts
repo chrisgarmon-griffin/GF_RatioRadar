@@ -71,6 +71,8 @@ export function validateWidget(body: unknown): WidgetValidation {
   };
 }
 
+export type WidgetTerm = "30" | "40" | "io";
+
 export interface WidgetQuote {
   dscr: number;
   dscrLow?: number;
@@ -87,30 +89,44 @@ export interface WidgetQuote {
   downPct: number;
   downPayment: number;
   need: DownPaymentNeed;
+  /** Estimated rent minus the total payment. */
+  monthlyCashFlow: number;
+  /** DSCR and rate for each loan type at the same down payment, so the widget can compare without three round trips. */
+  byTerm: Record<WidgetTerm, { dscr: number; rate: number }>;
   /** True when the listing's own tax figure was used instead of the purchase-price placeholder. */
   usedListingTax: boolean;
 }
 
 // Uses the search-scope rent provider, which stays on sample data, so the demo cannot run up paid rent calls.
 export async function quoteWidget(i: WidgetInput): Promise<WidgetQuote> {
-  const [rent, rate] = await Promise.all([
+  const loanAmount = Math.round(i.price * (1 - i.downPct));
+  const flags: Record<WidgetTerm, { interestOnly: boolean; fortyYear: boolean }> = {
+    "30": { interestOnly: false, fortyYear: false },
+    "40": { interestOnly: false, fortyYear: true },
+    io: { interestOnly: true, fortyYear: false },
+  };
+  const terms = Object.keys(flags) as WidgetTerm[];
+  const [rent, ...quotes] = await Promise.all([
     rents().estimate({
       id: "widget", address: i.address, city: i.city, state: i.state, zip: i.zip, price: i.price,
       beds: i.beds, baths: i.baths, sqft: i.sqft, propertyType: "SFR", daysOnMarket: 0, photoUrl: null, source: "widget",
     }),
-    rates().quote({ interestOnly: i.interestOnly, fortyYear: i.fortyYear, downPct: i.downPct, loanAmount: Math.round(i.price * (1 - i.downPct)) }),
+    ...terms.map((t) => rates().quote({ ...flags[t], downPct: i.downPct, loanAmount })),
   ]);
   const taxAnnual = i.taxAnnual ?? i.price * DEFAULT_ASSUMPTIONS.taxRate;
   const hoa = i.hoaMonthly ?? 0;
   // HOA is a fixed monthly cost like tax, so fold it into the price-based rate the engine already handles.
   const a: Assumptions = { ...DEFAULT_ASSUMPTIONS, taxRate: (taxAnnual + hoa * 12) / i.price };
-  const base = { price: i.price, annualRate: rate.rate, interestOnly: i.interestOnly, fortyYear: i.fortyYear };
-  const at = (monthlyRent: number) => computeDscr({ ...base, monthlyRent, downPct: i.downPct }, a);
-  const mid = at(rent.monthlyRent);
+  const selected: WidgetTerm = i.interestOnly ? "io" : i.fortyYear ? "40" : "30";
+  const rateFor = (t: WidgetTerm) => quotes[terms.indexOf(t)];
+  const run = (t: WidgetTerm, monthlyRent: number) =>
+    computeDscr({ price: i.price, annualRate: rateFor(t).rate, ...flags[t], monthlyRent, downPct: i.downPct }, a);
+  const mid = run(selected, rent.monthlyRent);
+  const rate = rateFor(selected);
   return {
     dscr: mid.dscr,
-    dscrLow: rent.low ? at(rent.low).dscr : undefined,
-    dscrHigh: rent.high ? at(rent.high).dscr : undefined,
+    dscrLow: rent.low ? run(selected, rent.low).dscr : undefined,
+    dscrHigh: rent.high ? run(selected, rent.high).dscr : undefined,
     monthlyRent: rent.monthlyRent,
     rentSource: rent.source,
     rate: rate.rate,
@@ -122,7 +138,15 @@ export async function quoteWidget(i: WidgetInput): Promise<WidgetQuote> {
     pitia: mid.pitia,
     downPct: i.downPct,
     downPayment: mid.downPayment,
-    need: requiredDownPayment({ ...base, monthlyRent: rent.monthlyRent }, undefined, a),
+    need: requiredDownPayment(
+      { price: i.price, annualRate: rate.rate, ...flags[selected], monthlyRent: rent.monthlyRent },
+      undefined,
+      a,
+    ),
+    monthlyCashFlow: rent.monthlyRent - mid.pitia,
+    byTerm: Object.fromEntries(
+      terms.map((t) => [t, { dscr: run(t, rent.monthlyRent).dscr, rate: rateFor(t).rate }]),
+    ) as WidgetQuote["byTerm"],
     usedListingTax: i.taxAnnual !== undefined,
   };
 }

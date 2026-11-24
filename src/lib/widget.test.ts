@@ -50,4 +50,13 @@ describe("widget quote (fixture providers)", () => {
     expect(q.dscrHigh!).toBeGreaterThan(q.dscr);
     expect(q.need.reachable ? q.need.downPct >= 0.2 : true).toBe(true);
   });
+  it("compares the three loan types and reports cash flow", async () => {
+    const q = await quoteWidget(input());
+    expect(q.byTerm["30"].dscr).toBeCloseTo(q.dscr, 6);
+    expect(q.byTerm.io.dscr).toBeGreaterThan(q.byTerm["40"].dscr);
+    expect(q.byTerm["40"].dscr).toBeGreaterThan(q.byTerm["30"].dscr);
+    expect(q.monthlyCashFlow).toBeCloseTo(q.monthlyRent - q.pitia, 6);
+    const io = await quoteWidget(input({ interestOnly: true }));
+    expect(io.dscr).toBeCloseTo(q.byTerm.io.dscr, 6);
+  });
 });
